@@ -16,11 +16,13 @@ interface MedicareProgram {
 }
 
 interface ClinicalGuidelinesProps {
-  medicarePrograms: MedicareProgram[];
+  medicarePrograms?: MedicareProgram[];
+  onScheduleCall?: () => void;
 }
 
 export const ClinicalGuidelines: React.FC<ClinicalGuidelinesProps> = ({ 
-  medicarePrograms 
+  medicarePrograms = [],
+  onScheduleCall
 }) => {
   const getIcon = (iconType: MedicareProgram['icon']) => {
     switch (iconType) {
@@ -64,7 +66,11 @@ export const ClinicalGuidelines: React.FC<ClinicalGuidelinesProps> = ({
               <div className="text-xs text-gray-500 mb-4">
                 <span className="font-medium">Eligibility:</span> {program.eligibility}
               </div>
-              <Button size="sm" className="w-full">
+              <Button 
+                size="sm" 
+                className="w-full"
+                onClick={onScheduleCall}
+              >
                 Discuss Eligibility
               </Button>
             </CardContent>
