@@ -1,4 +1,3 @@
-
 import { Goal } from "@/types/goals";
 
 export const goals: Goal[] = [
@@ -14,6 +13,9 @@ export const goals: Goal[] = [
     progress: 5,
     origin: "HANA",
     status: "ACTIVE",
+    current_streak: 3,
+    longest_streak: 5,
+    last_check_in_date: "2025-04-07",
     created_at: "2025-03-30T10:00:00Z",
     updated_at: "2025-04-07T15:30:00Z"
   },
@@ -29,6 +31,9 @@ export const goals: Goal[] = [
     progress: 6,
     origin: "PATIENT",
     status: "ACTIVE",
+    current_streak: 6,
+    longest_streak: 7,
+    last_check_in_date: "2025-04-10",
     created_at: "2025-03-24T09:15:00Z",
     updated_at: "2025-04-10T14:20:00Z"
   },
@@ -44,6 +49,9 @@ export const goals: Goal[] = [
     progress: 2,
     origin: "PATIENT",
     status: "ACTIVE",
+    current_streak: 2,
+    longest_streak: 2,
+    last_check_in_date: "2025-04-07",
     created_at: "2025-03-31T11:30:00Z",
     updated_at: "2025-04-07T10:45:00Z"
   },
@@ -59,6 +67,9 @@ export const goals: Goal[] = [
     progress: 0,
     origin: "HANA",
     status: "ACTIVE",
+    current_streak: 0,
+    longest_streak: 0,
+    last_check_in_date: null,
     created_at: "2025-03-30T16:40:00Z",
     updated_at: "2025-03-30T16:40:00Z"
   },
@@ -139,7 +150,7 @@ export const suggestedGoals: Partial<Goal>[] = [
   }
 ];
 
-// For compatibility with existing UI components
+// For compatibility with existing UI components, map database fields to UI fields
 export const formattedGoals = goals.map(goal => ({
   ...goal,
   category: goal.id % 2 === 0 ? "Lifestyle" : "Physical Health", 
@@ -148,9 +159,9 @@ export const formattedGoals = goals.map(goal => ({
         goal.duration_type === "MEDIUM" ? "medium term" as const : 
         "long term" as const,
   source: goal.origin === "HANA" ? "Hana Suggested" : "Personal" as const,
-  // Add streak data
-  currentWeeklyStreak: goal.id === 2 ? 6 : goal.id === 1 ? 3 : goal.id === 3 ? 2 : 0,
-  longestStreak: goal.id === 2 ? 7 : goal.id === 1 ? 5 : goal.id === 3 ? 2 : 0,
+  // Map the database streak fields to UI streak fields
+  currentWeeklyStreak: goal.current_streak,
+  longestStreak: goal.longest_streak,
   thisWeekProgress: goal.id === 2 ? 5 : goal.id === 1 ? 3 : goal.id === 3 ? 1 : 0,
   weeklyTarget: goal.id === 2 ? 7 : goal.id === 1 ? 4 : goal.id === 3 ? 2 : 1
 }));

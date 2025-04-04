@@ -11,6 +11,12 @@ export interface Goal {
   progress: number;
   origin: 'HANA' | 'PATIENT';
   status: 'ACTIVE' | 'COMPLETED' | 'CANCELLED' | 'OVERDUE';
+  
+  // Adding streak tracking fields to match the schema
+  current_streak?: number;
+  longest_streak?: number;
+  last_check_in_date?: string;
+  
   created_at?: string;
   updated_at?: string;
 }
@@ -21,9 +27,8 @@ export interface FormattedGoal extends Goal {
   difficulty?: 'hard';
   term?: 'short term' | 'medium term' | 'long term';
   source: 'Hana Suggested' | 'Personal';
-  // Added streak information
-  currentWeeklyStreak?: number;
-  longestStreak?: number;
+  // Updated streak information naming to be consistent
+  currentWeeklyStreak?: number; // Maps to current_streak
   thisWeekProgress?: number;
   weeklyTarget?: number;
 }
