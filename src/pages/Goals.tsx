@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -21,7 +20,6 @@ const Goals = () => {
   const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
   const isMobile = useIsMobile();
   
-  // New goal state
   const [newGoal, setNewGoal] = useState({
     title: '',
     description: '',
@@ -34,7 +32,6 @@ const Goals = () => {
     ? formattedGoals 
     : formattedGoals.filter(goal => goal.category === selectedCategory);
   
-  // Helper function to map duration_type to UI term
   const getDurationLabel = (durationType: string) => {
     switch(durationType) {
       case 'SHORT': return 'Short Term';
@@ -44,21 +41,26 @@ const Goals = () => {
     }
   };
 
-  // Helper function to map status to UI badge color
   const getStatusColor = (status: string) => {
     switch(status) {
-      case 'ACTIVE': return 'bg-green-100 text-green-800';
+      case 'ACTIVE': return 'bg-hana-lightGreen text-positive-dark';
       case 'COMPLETED': return 'bg-blue-100 text-blue-800';
       case 'CANCELLED': return 'bg-gray-100 text-gray-800';
       case 'OVERDUE': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
-  
+
+  const getDurationColor = (durationType: string) => {
+    switch(durationType) {
+      case 'SHORT': return 'bg-hana-yellow text-mixed-dark';
+      case 'MEDIUM': return 'bg-hana-blue text-blue-800';
+      case 'LONG': return 'bg-hana-red text-concerning-dark';
+      default: return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   const handleCreateGoal = () => {
-    // Would typically make an API call here
-    
-    // Mock creating a new goal
     const today = new Date();
     const endDate = new Date();
     endDate.setMonth(today.getMonth() + newGoal.durationMonths);
@@ -81,9 +83,6 @@ const Goals = () => {
                   newGoal.durationMonths <= 6 ? 'MEDIUM' : 'LONG',
     };
     
-    // In a real app, we would save this to the backend
-    
-    // Close dialog and reset form
     setIsAddGoalOpen(false);
     setNewGoal({
       title: '',
@@ -152,16 +151,21 @@ const Goals = () => {
                   </Badge>
                 </div>
                 <div className="flex gap-2 mt-2">
-                  <Badge variant="outline" className={cn(getStatusColor(goal.status))}>
+                  <Badge 
+                    variant="outline" 
+                    className={cn(getStatusColor(goal.status), "text-xs")}
+                  >
                     {goal.status}
                   </Badge>
-                  <Badge variant="outline" className="bg-purple-100 text-purple-800">
+                  <Badge 
+                    variant="outline" 
+                    className={cn(getDurationColor(goal.duration_type), "text-xs")}
+                  >
                     {getDurationLabel(goal.duration_type)}
                   </Badge>
                 </div>
               </CardHeader>
               <CardContent>
-                {/* Simplified Streak Information */}
                 {currentStreak > 0 && (
                   <div className="mb-4 flex items-center gap-2">
                     <Trophy className="w-4 h-4 text-amber-500" />
@@ -169,7 +173,6 @@ const Goals = () => {
                   </div>
                 )}
 
-                {/* Overall Progress */}
                 <div className="pt-2">
                   <div className="flex justify-between items-center mb-1">
                     <div className="text-sm text-gray-600">
@@ -215,7 +218,6 @@ const Goals = () => {
         </div>
       )}
       
-      {/* Add Goal Dialog/Sheet (responsive) */}
       <GoalDialog open={isAddGoalOpen} onOpenChange={setIsAddGoalOpen}>
         <GoalDialogContent className="sm:max-w-[500px]">
           <GoalDialogHeader>

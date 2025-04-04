@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Target, Award, Calendar, Check, Trophy } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,7 +15,6 @@ interface Goal {
   term: string;
   start_date: string;
   end_date: string;
-  // Added fields for streak information
   current_streak?: number;
   longest_streak?: number;
   currentWeeklyStreak?: number;
@@ -30,27 +28,30 @@ interface GoalStreakSectionProps {
 }
 
 const GoalStreakSection: React.FC<GoalStreakSectionProps> = ({ goals }) => {
-  // Sort goals by progress percentage to highlight most completed goals
   const sortedGoals = [...goals].sort((a, b) => {
     const aProgress = (a.progress / a.target) * 100;
     const bProgress = (b.progress / b.target) * 100;
     return bProgress - aProgress;
   });
 
-  // Take top 4 goals for the streak display
   const topGoals = sortedGoals.slice(0, 4);
   
-  // Calculate overall streak stats
   const totalGoalsCompleted = goals.filter(g => g.progress >= g.target).length;
   const goalsInProgress = goals.filter(g => g.progress > 0 && g.progress < g.target).length;
   
-  // Find goal with longest streak
   const longestStreakGoal = [...goals].sort((a, b) => 
     (b.longest_streak || b.longestStreak || 0) - (a.longest_streak || a.longestStreak || 0)
   )[0];
   const streakDays = longestStreakGoal?.longest_streak || longestStreakGoal?.longestStreak || 0;
   const streakGoalName = longestStreakGoal?.title || "No active streak";
   
+  const getProgressColor = (progressPercent: number) => {
+    if (progressPercent >= 75) return 'bg-positive-light text-positive-dark';
+    if (progressPercent >= 50) return 'bg-mixed-light text-mixed-dark';
+    if (progressPercent >= 25) return 'bg-concerning-light text-concerning-dark';
+    return 'bg-red-100 text-red-800';
+  };
+
   return (
     <Card className="shadow-sm overflow-hidden border-gray-200 bg-white rounded-xl">
       <CardHeader className="pb-2 border-b border-gray-100 bg-gray-50">
@@ -67,18 +68,17 @@ const GoalStreakSection: React.FC<GoalStreakSectionProps> = ({ goals }) => {
       </CardHeader>
       
       <CardContent className="p-4">
-        {/* Stats summary at the top */}
         <div className="mb-4 grid grid-cols-3 gap-2 text-center">
-          <div className="bg-green-50 rounded-lg p-2">
-            <p className="text-xl text-green-700 font-bold">{totalGoalsCompleted}</p>
+          <div className="bg-hana-lightGreen rounded-lg p-2">
+            <p className="text-xl text-positive-dark font-bold">{totalGoalsCompleted}</p>
             <p className="text-xs text-gray-700">Completed</p>
           </div>
-          <div className="bg-blue-50 rounded-lg p-2">
-            <p className="text-xl text-blue-700 font-bold">{goalsInProgress}</p>
+          <div className="bg-hana-blue rounded-lg p-2">
+            <p className="text-xl text-blue-800 font-bold">{goalsInProgress}</p>
             <p className="text-xs text-gray-700">In Progress</p>
           </div>
-          <div className="bg-amber-50 rounded-lg p-2">
-            <p className="text-xl text-amber-700 font-bold">{streakDays}</p>
+          <div className="bg-hana-yellow rounded-lg p-2">
+            <p className="text-xl text-mixed-dark font-bold">{streakDays}</p>
             <p className="text-xs text-gray-700">
               <span className="inline-block truncate max-w-full">
                 {streakDays > 0 ? "Longest Streak" : "No Streak"}
@@ -104,13 +104,14 @@ const GoalStreakSection: React.FC<GoalStreakSectionProps> = ({ goals }) => {
             const daysLeft = Math.ceil((new Date(goal.end_date).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
             const currentStreak = goal.current_streak || goal.currentWeeklyStreak || 0;
             
-            // Determine color based on progress
-            const progressColor = progressPercent >= 75 ? 'bg-green-500' : 
-                                 progressPercent >= 50 ? 'bg-amber-500' : 
-                                 progressPercent >= 25 ? 'bg-orange-500' : 'bg-red-500';
-                                 
             return (
-              <div key={goal.id} className="border border-gray-200 rounded-lg p-3 hover:shadow-sm transition">
+              <div 
+                key={goal.id} 
+                className={cn(
+                  "border rounded-lg p-3 hover:shadow-sm transition",
+                  getProgressColor(progressPercent)
+                )}
+              >
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-medium text-gray-800 text-sm">{goal.title}</h3>
