@@ -1,12 +1,12 @@
 
 import React, { useState } from 'react';
 import DashboardHeader from '@/components/DashboardHeader';
-import HealthMetrics from '@/components/HealthMetrics';
 import ProgressSection from '@/components/ProgressSection';
 import UpcomingActions from '@/components/UpcomingActions';
 import JourneySoFarSection from './sections/JourneySoFarSection';
-import { MetricProps } from '@/components/metrics/MetricCard';
-import { Check, Clock, CalendarClock, Bell, Activity } from 'lucide-react';
+import { Check, Clock, CalendarClock, Bell } from 'lucide-react';
+import HealthPulseSection from './sections/HealthPulseSection';
+import { HealthPulseItem } from '@/types/dashboard';
 
 interface DashboardProps {
   onScheduleCall?: () => void;
@@ -15,55 +15,44 @@ interface DashboardProps {
 export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
   const userName = "Sarah";
   
-  // Demo metrics data
-  const metrics: MetricProps[] = [
+  // Health pulse data
+  const healthPulseData: HealthPulseItem[] = [
     {
-      title: "Physical Health",
-      value: "Moderate",
-      change: "+5%",
-      status: "mixed",
-      icon: <Activity className="w-5 h-5 text-blue-500" />,
-      insights: [
-        "Blood pressure: 128/82",
-        "Activity: 6,500 steps/day avg",
-        "Sleep: 6.2 hrs avg"
-      ]
+      area: "Sleep",
+      score: 68,
+      initialScore: 60,
+      improving: true,
+      priority: true
     },
     {
-      title: "Mental Wellbeing",
-      value: "75/100",
-      change: "+12%",
-      status: "positive",
-      icon: <Activity className="w-5 h-5 text-purple-500" />,
-      insights: [
-        "Stress levels decreasing",
-        "Regular meditation practice",
-        "Mood: Generally positive"
-      ]
+      area: "Social Support",
+      score: 72,
+      initialScore: 65,
+      improving: true
     },
     {
-      title: "Social Connection",
-      value: "Good",
-      change: "Stable",
-      status: "mixed",
-      icon: <Activity className="w-5 h-5 text-green-500" />,
-      insights: [
-        "Regular calls with family",
-        "Weekly community activities",
-        "2 close support contacts"
-      ]
+      area: "Energy Level",
+      score: 65,
+      initialScore: 60,
+      improving: true
     },
     {
-      title: "Medical Adherence",
-      value: "92%",
-      change: "+4%",
-      status: "positive",
-      icon: <Activity className="w-5 h-5 text-red-500" />,
-      insights: [
-        "Missed 2 medications this month",
-        "Using medication reminder system",
-        "Doctor appointment attended"
-      ]
+      area: "Stress Management",
+      score: 55,
+      initialScore: 48,
+      improving: true
+    },
+    {
+      area: "Cognitive Function",
+      score: 42,
+      initialScore: 40,
+      improving: true
+    },
+    {
+      area: "Emotional Regulation",
+      score: 35,
+      initialScore: 35,
+      improving: false
     }
   ];
   
@@ -145,8 +134,22 @@ export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
           <div className="lg:col-span-2 space-y-6">
             <h1 className="text-2xl font-bold text-gray-900">Welcome back, {userName}!</h1>
             
-            {/* Health Metrics */}
-            <HealthMetrics metrics={metrics} />
+            {/* Health Pulse Section - Replacing HealthMetrics */}
+            <HealthPulseSection
+              data={healthPulseData}
+              mostImproved="Sleep"
+              focusArea="Emotional Regulation"
+              positiveAreas={4}
+              totalAreas={6}
+              environmentTips={{
+                title: "Environmental Factors",
+                tips: [
+                  "Keep bedroom temperature between 65-68°F",
+                  "Reduce noise and light during sleep hours",
+                  "Morning sunlight exposure helps regulate sleep cycles"
+                ]
+              }}
+            />
             
             {/* Journey Roadmap */}
             <div className="mb-8">
