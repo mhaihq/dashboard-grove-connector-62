@@ -8,6 +8,7 @@ interface ClinicalGuidelineCardProps {
     description: string;
     icon: string;
     priority: string;
+    whyItMatters?: string;
   };
   simplified?: boolean;
 }

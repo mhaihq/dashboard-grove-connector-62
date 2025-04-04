@@ -65,13 +65,9 @@ export const ClinicalGuidelines: React.FC = () => {
               <AccordionItem value={`program-${index}`} className="border-none">
                 <AccordionTrigger className="px-4 py-3 hover:bg-gray-50">
                   <div className="flex items-center">
-                    <span className="font-medium">{program.title}</span>
-                    <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${
-                      program.type === 'care-management' 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-purple-100 text-purple-800'
-                    }`}>
-                      {program.type === 'care-management' ? 'Care Program' : 'Specialty Care'}
+                    <span className="font-medium">{program.name}</span>
+                    <span className={`ml-2 text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-800`}>
+                      Care Program
                     </span>
                   </div>
                 </AccordionTrigger>
@@ -89,11 +85,7 @@ export const ClinicalGuidelines: React.FC = () => {
                   
                   <div className="mb-3">
                     <h4 className="text-sm font-medium text-gray-900 mb-2">Eligibility:</h4>
-                    <ul className="list-disc pl-5 space-y-1">
-                      {program.eligibility.map((criterion, criterionIdx) => (
-                        <li key={criterionIdx} className="text-sm text-gray-700">{criterion}</li>
-                      ))}
-                    </ul>
+                    <p className="text-sm text-gray-700">{program.eligibility}</p>
                   </div>
                   
                   <div className="flex justify-end">

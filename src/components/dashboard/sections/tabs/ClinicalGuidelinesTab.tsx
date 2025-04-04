@@ -56,10 +56,10 @@ const ClinicalGuidelinesTab: React.FC<ClinicalGuidelinesTabProps> = ({ onSchedul
           {medicarePrograms.slice(0, 2).map((program, index) => (
             <div key={index} className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all">
               <div className="bg-blue-50 p-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900">{program.title}</h3>
+                <h3 className="text-lg font-medium text-gray-900">{program.name}</h3>
               </div>
               <div className="p-4">
-                <p className="text-gray-700 text-sm">{program.shortDescription || program.description.substring(0, 100) + '...'}</p>
+                <p className="text-gray-700 text-sm">{program.description.substring(0, 100) + '...'}</p>
               </div>
             </div>
           ))}
