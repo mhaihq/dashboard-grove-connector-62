@@ -37,64 +37,33 @@ export const ContextBanner: React.FC<ContextBannerProps> = ({
     }
   };
 
-  // Check if items are strings or ContextItems
-  const isStringArray = (arr: any[]): arr is string[] => {
-    return typeof arr[0] === 'string';
-  };
-
-  // Get icon color based on context item type
-  const getItemTypeColor = (type?: 'info' | 'warning' | 'success' | 'neutral') => {
-    switch (type) {
-      case 'info':
-        return "text-blue-600";
-      case 'warning':
-        return "text-amber-600";
-      case 'success':
-        return "text-green-600";
-      case 'neutral':
-        return "text-gray-600";
-      default:
-        return "text-blue-600";
-    }
-  };
-
   return (
-    <div className={cn("p-4 border rounded-lg", getVariantStyles())}>
-      <div className="flex items-start gap-3">
-        <div className="flex-shrink-0 mt-0.5">
+    <div className={cn("border rounded-lg p-4 mb-5", getVariantStyles())}>
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
           {icon}
+          <h3 className="font-medium">{title}</h3>
         </div>
-        
-        <div className="flex-1">
-          <div className="flex items-center justify-between mb-1">
-            <h3 className="font-medium text-lg">{title}</h3>
-            {date && (
-              <div className="flex items-center text-xs gap-1 text-gray-600">
-                <Clock className="h-3.5 w-3.5" />
-                <span>{date}</span>
-              </div>
-            )}
+        {date && (
+          <div className="flex items-center text-xs opacity-70">
+            <Clock className="h-3 w-3 mr-1" />
+            <span>{date}</span>
           </div>
-          
-          <div className="space-y-1">
-            {isStringArray(items) ? (
-              // If items is a string array
-              items.map((item, idx) => (
-                <p key={idx} className="text-sm">
-                  • {item}
-                </p>
-              ))
-            ) : (
-              // If items is a ContextItem array
-              items.map((item, idx) => (
-                <p key={idx} className={cn("text-sm", getItemTypeColor(item.type))}>
-                  • {item.text}
-                </p>
-              ))
-            )}
-          </div>
-        </div>
+        )}
       </div>
+      
+      <ul className="space-y-1 pl-6">
+        {items.map((item, index) => {
+          const itemText = typeof item === 'string' ? item : item.text;
+          const itemType = typeof item === 'string' ? 'neutral' : item.type || 'neutral';
+          
+          return (
+            <li key={index} className="text-sm">
+              {itemText}
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 };
