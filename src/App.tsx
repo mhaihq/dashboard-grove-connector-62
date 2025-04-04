@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import Goals from "./pages/Goals";
 import ScheduleFollowup from "./pages/ScheduleFollowup";
 import FollowupReport from "./pages/FollowupReport";
 import ClinicalGuidelines from "./pages/ClinicalGuidelines";
@@ -25,6 +26,7 @@ const App = () => (
           <div className="flex-1">
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/goals" element={<Goals />} />
               <Route path="/clinical-guidelines" element={<ClinicalGuidelines />} />
               <Route path="/schedule-followup" element={<ScheduleFollowup />} />
               <Route path="/followup-report" element={<FollowupReport />} />
