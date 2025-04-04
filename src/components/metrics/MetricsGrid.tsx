@@ -16,6 +16,9 @@ export const MetricsGrid: React.FC<MetricsGridProps> = ({ metrics }) => {
           status={metric.status}
           icon={metric.icon}
           description={metric.description}
+          value={metric.value}
+          change={metric.change}
+          insights={metric.insights}
         />
       ))}
     </div>
