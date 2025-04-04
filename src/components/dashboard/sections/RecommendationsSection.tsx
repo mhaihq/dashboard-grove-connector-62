@@ -17,7 +17,7 @@ export const RecommendationsSection: React.FC<RecommendationsSectionProps> = ({
       
       <div>
         <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-lg font-medium text-gray-900">Behavioral Insights</h3>
+          <h3 className="text-lg font-medium text-gray-900">Behavioral Patterns</h3>
         </div>
         
         <BehavioralInsightsTab />
