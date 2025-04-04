@@ -1,9 +1,16 @@
+
 import React, { useState, useEffect } from 'react';
 import { Activity, Sparkles, TrendingUp, AlertTriangle, ArrowUp, ArrowDown, ArrowRight, Calendar, Info } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
-import { Slider } from '@/components/ui/slider';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import {
   Radar,
   RadarChart,
@@ -296,32 +303,35 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
             </span>
           </div>
           
-          <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
-            <div>
-              <p className="text-blue-800 font-medium">
-                {weeklyInsights[currentInsight]}
-              </p>
-              <p className="mt-3 text-sm text-blue-700">
-                This was mentioned in 3 of your last 4 calls.
-              </p>
+          <Carousel
+            className="w-full"
+            onSelect={(api) => {
+              if (api) {
+                setCurrentInsight(api.selectedScrollSnap());
+              }
+            }}
+          >
+            <CarouselContent>
+              {weeklyInsights.map((insight, index) => (
+                <CarouselItem key={index}>
+                  <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+                    <div>
+                      <p className="text-blue-800 font-medium">
+                        {insight}
+                      </p>
+                      <p className="mt-3 text-sm text-blue-700">
+                        This was mentioned in 3 of your last 4 calls.
+                      </p>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <div className="flex items-center justify-center mt-4">
+              <CarouselPrevious className="static transform-none mx-2" />
+              <CarouselNext className="static transform-none mx-2" />
             </div>
-          </div>
-          
-          {weeklyInsights.length > 1 && (
-            <div className="mt-4 px-2">
-              <Slider
-                value={[currentInsight]}
-                max={weeklyInsights.length - 1}
-                step={1}
-                onValueChange={handleSliderChange}
-                className="w-full"
-              />
-              <div className="flex justify-between text-xs text-gray-500 mt-1">
-                <span>Pattern 1</span>
-                <span>Pattern {weeklyInsights.length}</span>
-              </div>
-            </div>
-          )}
+          </Carousel>
           
           <div className="mt-2 text-xs text-gray-500">
             Pattern origin: Based on voice conversation & streak data
