@@ -118,11 +118,11 @@ const Goals = () => {
                   </div>
                   <Progress 
                     value={progressPercent} 
-                    className="h-2"
-                    indicatorClassName={cn(
-                      progressPercent > 66 ? "bg-green-500" :
-                      progressPercent > 33 ? "bg-amber-500" :
-                      "bg-red-500"
+                    className={cn(
+                      "h-2",
+                      progressPercent > 66 ? "bg-secondary text-green-500" :
+                      progressPercent > 33 ? "bg-secondary text-amber-500" :
+                      "bg-secondary text-red-500"
                     )}
                   />
                 </div>
