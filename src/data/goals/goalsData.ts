@@ -1,199 +1,140 @@
-import { Goal } from "@/types/goals";
 
-export const goals: Goal[] = [
+import { FormattedGoal, Goal } from "@/types/goals";
+
+// Updated to match the database schema
+export const goals: FormattedGoal[] = [
   {
-    id: "goal1",
+    id: 1,
+    user_id: 1,
     title: "Practice Mindfulness Daily",
-    duration: "Short-Term",
-    startDate: "2025-04-01",
-    endDate: "2025-04-14",
-    target: {
-      count: 7,
-      unit: "sessions/week"
-    },
+    duration_type: "SHORT",
+    start_date: "2025-04-01",
+    end_date: "2025-04-14",
+    target: 7,
     progress: 5,
+    description: "Practice mindfulness meditation for at least 10 minutes each day",
+    origin: "HANA",
+    status: "ACTIVE",
+    created_at: "2025-04-01T00:00:00Z",
+    updated_at: "2025-04-07T00:00:00Z",
+    // UI specific properties
     category: "Lifestyle",
     source: "Hana Suggested",
-    checkIns: [
-      {
-        date: "2025-04-01",
-        note: "Hana Call: User started mindfulness practice"
-      },
-      {
-        date: "2025-04-07",
-        note: "Hana Call: User reported 5 sessions completed"
-      }
-    ],
-    nudge: "You've completed 5 sessions so far this week. Try for 2 more before Sunday!",
-    evidence: "Mindfulness-based cognitive therapy shows significant benefits for anxiety reduction",
-    benefits: [
-      "Reduced anxiety levels",
-      "Improved focus throughout the day",
-      "Better emotional regulation"
-    ],
-    difficulty: "hard",
-    term: "short term"
+    difficulty: "hard"
   },
   {
-    id: "goal2",
+    id: 2,
+    user_id: 1,
     title: "Maintain Regular Sleep Schedule",
-    duration: "Medium-Term",
-    startDate: "2025-03-25",
-    endDate: "2025-04-25",
-    target: {
-      count: 8,
-      unit: "hours/night"
-    },
+    duration_type: "MEDIUM",
+    start_date: "2025-03-25",
+    end_date: "2025-04-25",
+    target: 8,
     progress: 6,
+    description: "Go to bed and wake up at consistent times to achieve 8 hours of sleep",
+    origin: "PATIENT",
+    status: "ACTIVE",
+    created_at: "2025-03-25T00:00:00Z",
+    updated_at: "2025-04-10T00:00:00Z",
+    // UI specific properties
     category: "Lifestyle",
     source: "Personal",
-    checkIns: [
-      {
-        date: "2025-03-25",
-        note: "Hana Call: User wants to improve sleep schedule"
-      },
-      {
-        date: "2025-04-10",
-        note: "Hana Call: User achieving 6 hours consistently"
-      }
-    ],
-    nudge: "You're getting closer to your target of 8 hours. Try going to bed 30 minutes earlier this week.",
-    evidence: "Detected sleep pattern irregularities from voice sessions",
-    benefits: [
-      "More consistent energy levels",
-      "Improved cognitive function",
-      "Better mood regulation"
-    ],
-    difficulty: "hard",
-    term: "medium term"
+    difficulty: "hard"
   },
   {
-    id: "goal3",
+    id: 3,
+    user_id: 1,
     title: "Go to the Gym 2 times each week",
-    duration: "Short-Term",
-    startDate: "2025-04-01",
-    endDate: "2025-04-14",
-    target: {
-      count: 4,
-      unit: "visits total"
-    },
+    duration_type: "SHORT",
+    start_date: "2025-04-01",
+    end_date: "2025-04-14",
+    target: 4,
     progress: 2,
+    description: "Visit the gym and complete a full workout session twice weekly",
+    origin: "PATIENT",
+    status: "ACTIVE",
+    created_at: "2025-04-01T00:00:00Z",
+    updated_at: "2025-04-07T00:00:00Z",
+    // UI specific properties
     category: "Physical Health",
     source: "Personal",
-    checkIns: [
-      {
-        date: "2025-04-07",
-        note: "Hana Call: User reported 2 visits"
-      }
-    ],
-    nudge: "You've visited 2 times so far this period. Try to go at least 1 more time before next week!",
-    benefits: [
-      "Improved physical strength",
-      "Better cardiovascular health",
-      "Increased energy levels"
-    ],
-    difficulty: "hard",
-    term: "short term"
+    difficulty: "hard"
   },
   {
-    id: "goal4",
+    id: 4,
+    user_id: 1,
     title: "Weekly Social Connection",
-    duration: "Long-Term",
-    startDate: "2025-04-01",
-    endDate: "2025-06-01",
-    target: {
-      count: 1,
-      unit: "meaningful interaction/week"
-    },
+    duration_type: "LONG",
+    start_date: "2025-04-01",
+    end_date: "2025-06-01",
+    target: 8,
     progress: 0,
+    description: "Schedule at least one meaningful social interaction per week",
+    origin: "HANA",
+    status: "ACTIVE",
+    created_at: "2025-04-01T00:00:00Z",
+    updated_at: "2025-04-01T00:00:00Z",
+    // UI specific properties
     category: "Social",
     source: "Hana Suggested",
-    description: "Schedule at least one meaningful social interaction per week",
-    benefits: [
-      "Strengthened support network",
-      "Reduced feelings of isolation",
-      "Improved mood and energy"
-    ],
-    difficulty: "hard",
-    term: "medium term"
+    difficulty: "hard"
   },
   {
-    id: "goal5",
+    id: 5,
+    user_id: 1,
     title: "Morning Mindfulness Routine",
-    duration: "Medium-Term",
-    startDate: "2025-04-15",
-    endDate: "2025-05-15",
-    target: {
-      count: 10,
-      unit: "minute sessions/day"
-    },
+    duration_type: "MEDIUM",
+    start_date: "2025-04-15",
+    end_date: "2025-05-15",
+    target: 10,
     progress: 0,
+    description: "Start each day with a 10-minute mindfulness practice",
+    origin: "HANA",
+    status: "ACTIVE",
+    created_at: "2025-04-15T00:00:00Z",
+    updated_at: "2025-04-15T00:00:00Z",
+    // UI specific properties
     category: "Coping Skills",
     source: "Hana Suggested",
-    description: "Start each day with a 10-minute mindfulness practice",
-    benefits: [
-      "Reduced anxiety levels",
-      "Improved focus throughout the day",
-      "Better emotional regulation"
-    ],
-    difficulty: "hard",
-    term: "short term"
+    difficulty: "hard"
   },
   {
-    id: "goal6",
+    id: 6,
+    user_id: 1,
     title: "Medication Adherence",
-    duration: "Long-Term",
-    startDate: "2025-04-01",
-    endDate: "2025-07-01",
-    target: {
-      count: 1,
-      unit: "dose/day"
-    },
+    duration_type: "LONG",
+    start_date: "2025-04-01",
+    end_date: "2025-07-01",
+    target: 30,
     progress: 7,
+    description: "Take prescribed medication daily without missing doses",
+    origin: "PATIENT",
+    status: "ACTIVE",
+    created_at: "2025-04-01T00:00:00Z",
+    updated_at: "2025-04-07T00:00:00Z",
+    // UI specific properties
     category: "Medication",
     source: "Personal",
-    checkIns: [
-      {
-        date: "2025-04-07",
-        note: "Hana Call: User has taken medication daily for first week"
-      }
-    ],
-    nudge: "Great job maintaining your medication routine! Keep the streak going.",
-    benefits: [
-      "Consistent therapeutic effects",
-      "Reduced symptom fluctuations",
-      "Better overall management"
-    ],
-    difficulty: "hard",
-    term: "long term"
+    difficulty: "hard"
   },
   {
-    id: "goal7",
+    id: 7,
+    user_id: 1,
     title: "Therapy Reflection Journal",
-    duration: "Medium-Term",
-    startDate: "2025-04-01",
-    endDate: "2025-05-15",
-    target: {
-      count: 2,
-      unit: "entries/week"
-    },
+    duration_type: "MEDIUM",
+    start_date: "2025-04-01",
+    end_date: "2025-05-15",
+    target: 12,
     progress: 3,
+    description: "Write therapy reflections twice weekly to track insights and progress",
+    origin: "PATIENT",
+    status: "ACTIVE",
+    created_at: "2025-04-01T00:00:00Z",
+    updated_at: "2025-04-07T00:00:00Z",
+    // UI specific properties
     category: "Therapy",
     source: "Personal",
-    checkIns: [
-      {
-        date: "2025-04-07",
-        note: "Hana Call: User has completed 3 journal entries"
-      }
-    ],
-    nudge: "Your journaling is helping track therapy insights. Try reflecting on patterns you're noticing.",
-    benefits: [
-      "Better retention of therapy concepts",
-      "Increased self-awareness",
-      "Improved ability to track progress"
-    ],
-    difficulty: "hard",
-    term: "medium term"
+    difficulty: "hard"
   }
 ];
 
@@ -207,31 +148,21 @@ export const goalCategories = [
   "Physical Health"
 ];
 
-export const suggestedGoals: Partial<Goal>[] = [
+export const suggestedGoals: Partial<FormattedGoal>[] = [
   {
-    id: "suggested1",
+    id: 101,
     title: "Morning Mindfulness Routine",
     category: "Coping Skills",
     description: "Start each day with a 10-minute mindfulness practice",
-    benefits: [
-      "Reduced anxiety levels",
-      "Improved focus throughout the day",
-      "Better emotional regulation"
-    ],
     difficulty: "hard",
-    term: "short term"
+    origin: "HANA"
   },
   {
-    id: "suggested2",
+    id: 102,
     title: "Weekly Social Connection",
     category: "Social",
     description: "Schedule at least one meaningful social interaction per week",
-    benefits: [
-      "Strengthened support network",
-      "Reduced feelings of isolation",
-      "Improved mood and energy"
-    ],
     difficulty: "hard",
-    term: "medium term"
+    origin: "HANA"
   }
 ];
