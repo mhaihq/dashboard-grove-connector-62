@@ -1,203 +1,185 @@
-import React from 'react';
-import { 
-  userInfo, welcome, userBackground, overview, 
-  healthIndicators, journalEntries, carePlanItems, 
-  suggestedPrograms, medicarePrograms, milestones, functionalAreas,
-  clinicalRecommendations
-} from '@/data/index';
-import { HealthPulseItem, HabitStreak, SystemSuggestion } from '@/types/dashboard';
 
-// Import lucide-react icons
-import { Trophy } from 'lucide-react';
-
-// Import our components
-import DashboardLayout from '@/components/dashboard/DashboardLayout';
-import HealthPulseSection from '@/components/dashboard/sections/HealthPulseSection';
-import GoalsSection from '@/components/dashboard/sections/GoalsSection';
-import RecommendationsSection from '@/components/dashboard/sections/RecommendationsSection';
-import JourneySoFarSection from '@/components/dashboard/sections/JourneySoFarSection';
-import WelcomeBanner from '@/components/dashboard/WelcomeBanner';
+import React, { useState } from 'react';
+import DashboardHeader from '@/components/DashboardHeader';
+import UpcomingActions from '@/components/UpcomingActions';
+import JourneySoFarSection from './sections/JourneySoFarSection';
+import { Check, Clock, CalendarClock, Bell, Award, Target } from 'lucide-react';
+import HealthPulseSection from './sections/HealthPulseSection';
+import RecommendationsSection from './sections/RecommendationsSection';
+import { healthPulseData } from '@/data/health/healthPulseData';
+import { journalEntries } from '@/data/health/journalEntries';
+import GoalStreakSection from './sections/GoalStreakSection';
+import { formattedGoals } from '@/data/goals/goalsData';
 
 interface DashboardProps {
-  onScheduleCall: () => void;
+  onScheduleCall?: () => void;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
-  // Format health assessment data for the pulse chart
-  const healthAssessmentData: HealthPulseItem[] = functionalAreas.map(area => ({
-    area: area.title,
-    score: area.rating * 25,
-    improving: area.key === 'sleep',
-    priority: area.key === 'sleep' || area.key === 'stressManagement'
-  }));
-
-  // Calculate milestone achievement metrics
-  const milestonesData = {
-    weeklyPoints: journalEntries.reduce((sum, entry: any) => sum + (entry.points || 0), 0),
-    level: 2,
-    levelName: "Consistent Mover",
-    nextLevel: "Level 3",
-    pointsToNextLevel: 55,
-    achievements: milestones.map(milestone => ({
-      title: milestone.title,
-      unlocked: milestone.completed,
-      progress: milestone.completed ? 100 : (milestone.currentStreak / milestone.requiredStreak) * 100,
-      icon: <Trophy className="w-5 h-5 text-gray-400" />
-    }))
-  };
+  const userName = "Sarah";
   
-  // Get relevant life events for context
-  const notableLifeChanges = overview.find(section => 
-    section.title === "Notable Life Changes"
-  )?.items || [];
-  
-  // Calculate next scheduled check-in date
-  const today = new Date();
-  const nextWednesday = new Date(today);
-  nextWednesday.setDate(today.getDate() + (3 - today.getDay() + 7) % 7);
-  nextWednesday.setHours(17, 30, 0); // 5:30 PM
-  const nextCheckInDate = nextWednesday.toLocaleDateString('en-US', { 
-    weekday: 'long',
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit'
-  });
-  
-  // Get recent positive achievement for welcome banner
-  const recentAchievement = journalEntries.find(entry => entry.status === 'positive')?.text || 'Making progress!';
-  
-  // Get streak data
-  const streakBehavior = journalEntries.find(entry => (entry as any).streakCount > 2);
-  const streak = {
-    count: streakBehavior ? (streakBehavior as any).streakCount : 3,
-    behavior: streakBehavior ? streakBehavior.relatedTo.replace('_', ' ') : 'morning walks'
-  };
-
-  // Create active streaks for Goals section - adding 2 more to get 4 total
-  const activeStreaks: HabitStreak[] = [
+  // Demo recommendations data
+  const recommendations = [
     {
-      habit: "Morning Walks",
-      icon: "🥾",
-      days: 5,
-      target: 7,
-      trend: "+1 day ↑",
-      status: 'improved',
-      supportedGoal: "Sleep Restoration"
+      title: "Gentle Movement",
+      description: "Incorporate more regular, gentle movement into your daily routine to improve mobility and strength.",
+      steps: [
+        "Start with 10-minute morning stretches",
+        "Take a 15-minute walk after lunch",
+        "Try chair yoga 3 times per week (videos provided in resources)"
+      ],
+      priority: "high" as const,
+      relatedAreas: ["Mobility", "Strength", "Cardiovascular"],
+      timeframe: "Daily",
+      difficulty: "easy" as const
     },
     {
-      habit: "Alcohol-Free Days",
-      icon: "🍷",
-      days: 3,
-      target: 7,
-      trend: "-2 days ↓",
-      status: 'declined',
-      supportedGoal: "Stress Management"
+      title: "Sleep Improvement",
+      description: "Establish a consistent sleep routine to improve your sleep quality and overall energy levels.",
+      steps: [
+        "Set a consistent bedtime (10:30pm suggested)",
+        "Create a 30-minute wind-down routine",
+        "Limit screen time 1 hour before bed",
+        "Make bedroom cool and dark"
+      ],
+      priority: "medium" as const,
+      relatedAreas: ["Sleep", "Energy", "Mental Clarity"],
+      timeframe: "Daily",
+      difficulty: "moderate" as const
     },
     {
-      habit: "Daily Hydration",
-      icon: "💧",
-      days: 6,
-      target: 7,
-      trend: "+3 days ↑",
-      status: 'improved',
-      supportedGoal: "Afternoon Energy"
+      title: "Social Connection",
+      description: "Strengthen your social connections to improve mental wellbeing and provide support.",
+      steps: [
+        "Call one friend or family member weekly",
+        "Explore community groups matching your interests",
+        "Consider volunteer opportunities near you"
+      ],
+      priority: "medium" as const,
+      relatedAreas: ["Mental Health", "Emotional Support", "Community"],
+      timeframe: "Weekly",
+      difficulty: "moderate" as const
+    }
+  ];
+  
+  // Demo upcoming actions
+  const upcomingActions = [
+    {
+      title: "Schedule doctor follow-up",
+      description: "Follow up with Dr. Smith about medication adjustment",
+      dueDate: "2 days",
+      priority: "high" as const
     },
     {
-      habit: "Evening Reflection",
-      icon: "📔",
-      days: 4,
-      target: 7,
-      trend: "Stable",
-      status: 'stable',
-      supportedGoal: "Mood Balancing"
+      title: "Try chair yoga session",
+      description: "First session of recommended exercise program",
+      dueDate: "3 days",
+      priority: "medium" as const
+    },
+    {
+      title: "Review sleep journal",
+      description: "Track progress of new bedtime routine",
+      dueDate: "5 days",
+      priority: "low" as const
     }
   ];
 
-  // Create system suggestion
-  const systemSuggestion: SystemSuggestion = {
-    suggestion: "Hydration check-in every 2 hours to reduce fatigue spikes.",
-    basedOn: "reduced hydration + afternoon energy crash patterns",
-    impact: "Increased water intake correlates with 30% higher energy in the afternoons"
+  const handleScheduleCallClick = () => {
+    if (onScheduleCall) {
+      onScheduleCall();
+    }
   };
 
-  // Enhance care plan items with insights
-  const enhancedCarePlanItems = carePlanItems.map(item => {
-    let insights = "";
-    
-    if (item.title === "Sleep Restoration Protocol" && item.status === "in-progress") {
-      insights = "Reported better sleep on 3 nights you used this technique.";
-    } else if (item.title === "Stress Management Toolkit" && item.status === "started") {
-      insights = "Used 2 times this week. Most helpful on high-stress days.";
-    } else if (item.title === "Emotional Regulation Framework" && item.status === "not-started") {
-      insights = "Let's revisit this after building momentum with sleep + stress tools.";
-    }
-    
-    return {
-      ...item,
-      insights,
-      priority: item.title === "Sleep Restoration Protocol" ? "high" as const : 
-                item.title === "Stress Management Toolkit" ? "medium" as const : 
-                "low" as const
-    };
-  });
-  
   return (
-    <DashboardLayout>
-      {/* Banner with quick summary */}
-      <WelcomeBanner
-        userName={userInfo.name.split(' ')[0]}
-        recentAchievement="Your morning walks are making a difference!"
-        priorityAction={{
-          task: "Log your water intake",
-          estimatedTime: "2 min"
-        }}
-        streak={streak}
-        journeyProgress={35}
+    <div className="bg-gray-50 min-h-screen">
+      <DashboardHeader 
+        userName={userName} 
+        userEmail="sarah@example.com" 
       />
       
-      {/* A. Current Health Snapshot */}
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">Current Health Snapshot</h2>
-        <HealthPulseSection 
-          data={healthAssessmentData}
-          mostImproved="Sleep"
-          focusArea="Hydration"
-          positiveAreas={4}
-          totalAreas={6}
-        />
-      </div>
-      
-      {/* B. Goals & Milestones */}
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">Goals & Progress</h2>
-        <GoalsSection 
-          carePlanItems={enhancedCarePlanItems}
-          nextCheckInDate={nextCheckInDate}
-          activeStreaks={activeStreaks}
-          systemSuggestion={systemSuggestion}
-        />
-      </div>
-      
-      {/* C. Recommendations (Systems) */}
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">Recommendations (Systems)</h2>
-        <RecommendationsSection 
-          recommendations={clinicalRecommendations}
-          medicarePrograms={medicarePrograms}
-          onScheduleCall={onScheduleCall}
-        />
-      </div>
-      
-      {/* D. Your Health Journey Roadmap */}
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">Health Journey Roadmap</h2>
-        <JourneySoFarSection 
-          journalEntries={journalEntries}
-          milestonesData={milestonesData}
-        />
-      </div>
-    </DashboardLayout>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
+            <h1 className="text-2xl font-bold text-gray-900">Welcome back, {userName}!</h1>
+            
+            {/* Health Pulse Section - Using data from file */}
+            <HealthPulseSection
+              data={healthPulseData}
+              mostImproved="Sleep"
+              focusArea="Emotional Regulation"
+              positiveAreas={4}
+              totalAreas={6}
+              environmentTips={{
+                title: "Environmental Factors",
+                tips: [
+                  "Keep bedroom temperature between 65-68°F",
+                  "Reduce noise and light during sleep hours",
+                  "Morning sunlight exposure helps regulate sleep cycles"
+                ]
+              }}
+            />
+            
+            {/* Health Insights Section - Only behavioral insights now */}
+            <RecommendationsSection
+              recommendations={recommendations}
+              onScheduleCall={handleScheduleCallClick}
+            />
+            
+            {/* Journey Roadmap */}
+            <div className="mb-8">
+              <JourneySoFarSection />
+            </div>
+          </div>
+          
+          <div className="space-y-6">
+            {/* Goal Streak Section */}
+            <GoalStreakSection goals={formattedGoals} />
+            
+            <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
+              <div className="flex items-center gap-2 mb-4">
+                <Bell className="w-5 h-5 text-amber-500" />
+                <h2 className="text-lg font-semibold text-gray-900">Upcoming Actions</h2>
+              </div>
+              <UpcomingActions actions={upcomingActions} />
+            </div>
+            
+            <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
+              <div className="flex items-center gap-2 mb-4">
+                <CalendarClock className="w-5 h-5 text-blue-500" />
+                <h2 className="text-lg font-semibold text-gray-900">Next Appointments</h2>
+              </div>
+              <div className="space-y-3">
+                <div className="border rounded-lg p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-gray-400" />
+                      <span className="text-sm text-gray-500">Tomorrow, 2:00 PM</span>
+                    </div>
+                    <span className="inline-flex px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <Check className="w-3 h-3 mr-1" /> Confirmed
+                    </span>
+                  </div>
+                  <h3 className="font-medium mt-1">Weekly Health Coaching Call</h3>
+                </div>
+                
+                <div className="border rounded-lg p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-gray-400" />
+                      <span className="text-sm text-gray-500">March 15, 10:30 AM</span>
+                    </div>
+                    <span className="inline-flex px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                      <Clock className="w-3 h-3 mr-1" /> Pending
+                    </span>
+                  </div>
+                  <h3 className="font-medium mt-1">Dr. Smith - Medical Review</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
   );
 };
 

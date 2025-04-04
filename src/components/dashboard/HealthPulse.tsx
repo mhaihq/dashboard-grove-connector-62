@@ -1,9 +1,16 @@
 
 import React, { useState, useEffect } from 'react';
-import { Activity, Sparkles, TrendingUp, AlertTriangle, ArrowUp, ArrowDown, ArrowRight, Calendar, Info, Brain } from 'lucide-react';
+import { Activity, Sparkles, TrendingUp, AlertTriangle, ArrowUp, ArrowDown, ArrowRight, Calendar, Info, Circle, CircleDot } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import {
   Radar,
   RadarChart,
@@ -73,16 +80,7 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
   habitTrends = []
 }) => {
   const [currentInsight, setCurrentInsight] = useState(0);
-  
-  useEffect(() => {
-    if (weeklyInsights.length <= 1) return;
-    
-    const interval = setInterval(() => {
-      setCurrentInsight(prev => (prev + 1) % weeklyInsights.length);
-    }, 8000);
-    
-    return () => clearInterval(interval);
-  }, [weeklyInsights.length]);
+  const [api, setApi] = useState<any>(null);
   
   const improving = data.filter(item => item.improving);
   const needsWork = data.filter(item => !item.improving);
@@ -144,10 +142,34 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
     }
   };
 
+  // Auto-rotate carousel every 2 seconds
+  useEffect(() => {
+    if (!api || weeklyInsights.length <= 1) return;
+    
+    const intervalId = setInterval(() => {
+      const currentIndex = api.selectedScrollSnap();
+      const nextIndex = (currentIndex + 1) % weeklyInsights.length;
+      api.scrollTo(nextIndex);
+      setCurrentInsight(nextIndex);
+    }, 2000);
+    
+    return () => clearInterval(intervalId);
+  }, [api, weeklyInsights.length]);
+  
+  // Handle API setup for the carousel
+  const handleApiChange = (newApi: any) => {
+    if (!newApi) return;
+    
+    setApi(newApi);
+    
+    newApi.on("select", () => {
+      setCurrentInsight(newApi.selectedScrollSnap());
+    });
+  };
+
   return (
     <TooltipProvider>
       <div className="grid grid-cols-1 gap-6">
-        {/* Health Pattern Overview */}
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-base font-medium text-gray-800">Health Pattern Overview</h3>
@@ -166,9 +188,8 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
             </Tooltip>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Spider Chart (moved to left) */}
-            <div className="h-[260px] w-full">
+          <div className="flex justify-center">
+            <div className="h-[260px] w-full max-w-[500px]">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart cx="50%" cy="50%" outerRadius="70%" data={formattedData}>
                   <defs>
@@ -199,7 +220,6 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
                     dataKey="area" 
                     tick={(props) => {
                       const { x, y, payload, textAnchor } = props;
-                      const item = formattedData.find(d => d.area === payload.value);
                       
                       return (
                         <g>
@@ -268,58 +288,80 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
                 </RadarChart>
               </ResponsiveContainer>
             </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+            <div className="bg-green-50 border border-green-100 rounded-lg p-3">
+              <h4 className="text-sm font-medium text-green-800 mb-2 flex items-center">
+                <Sparkles className="w-4 h-4 mr-1 text-green-600" />
+                Improvements this week:
+              </h4>
+              {improvementSummaries.map((summary, idx) => (
+                <p key={idx} className="text-sm text-green-700 mb-1">
+                  {summary}
+                </p>
+              ))}
+            </div>
             
-            {/* Improvement and Needs Attention Summaries (moved to right) */}
-            <div className="space-y-4">
-              <div className="bg-green-50 border border-green-100 rounded-lg p-3 h-1/2">
-                <h4 className="text-sm font-medium text-green-800 mb-2 flex items-center">
-                  <Sparkles className="w-4 h-4 mr-1 text-green-600" />
-                  Improvements this week:
-                </h4>
-                {improvementSummaries.map((summary, idx) => (
-                  <p key={idx} className="text-sm text-green-700 mb-1">
-                    {summary}
-                  </p>
-                ))}
-              </div>
-              
-              <div className="bg-amber-50 border border-amber-100 rounded-lg p-3 h-1/2">
-                <h4 className="text-sm font-medium text-amber-800 mb-2 flex items-center">
-                  <AlertTriangle className="w-4 h-4 mr-1 text-amber-600" />
-                  Needs attention:
-                </h4>
-                {needsAttentionSummaries.map((summary, idx) => (
-                  <p key={idx} className="text-sm text-amber-700 mb-1">
-                    {summary}
-                  </p>
-                ))}
-              </div>
+            <div className="bg-amber-50 border border-amber-100 rounded-lg p-3">
+              <h4 className="text-sm font-medium text-amber-800 mb-2 flex items-center">
+                <AlertTriangle className="w-4 h-4 mr-1 text-amber-600" />
+                Needs attention:
+              </h4>
+              {needsAttentionSummaries.map((summary, idx) => (
+                <p key={idx} className="text-sm text-amber-700 mb-1">
+                  {summary}
+                </p>
+              ))}
             </div>
           </div>
         </div>
         
-        {/* AI Insight Card - Kept this section */}
         <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <div className="flex items-center mb-3">
-            <h3 className="text-base font-medium text-gray-800">This Week's Key Pattern</h3>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-base font-medium text-gray-800">This Week's Key Patterns</h3>
           </div>
           
-          <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
-            <div className="flex items-start">
-              <Brain className="w-5 h-5 text-blue-600 mr-2 mt-0.5" />
-              <div>
-                <p className="text-blue-800 font-medium">
-                  {weeklyInsights[currentInsight]}
-                </p>
-                <p className="mt-3 text-sm text-blue-700 flex items-center">
-                  <span className="mr-1">📍</span>
-                  This was mentioned in 3 of your last 4 calls.
-                </p>
-              </div>
-            </div>
+          <Carousel
+            className="w-full"
+            setApi={handleApiChange}
+          >
+            <CarouselContent>
+              {weeklyInsights.map((insight, index) => (
+                <CarouselItem key={index}>
+                  <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
+                    <div>
+                      <p className="text-blue-800 font-medium">
+                        {insight}
+                      </p>
+                      <p className="mt-3 text-sm text-blue-700">
+                        This was mentioned in 3 of your last 4 calls.
+                      </p>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+          
+          {/* Carousel indicators (dots) */}
+          <div className="flex items-center justify-center mt-3">
+            {weeklyInsights.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => api?.scrollTo(index)}
+                className="mx-1 focus:outline-none"
+              >
+                {index === currentInsight ? (
+                  <CircleDot className="w-4 h-4 text-blue-600" />
+                ) : (
+                  <Circle className="w-4 h-4 text-gray-300" />
+                )}
+              </button>
+            ))}
           </div>
           
-          <div className="mt-2 text-xs text-gray-500">
+          <div className="mt-3 text-xs text-gray-500 text-center">
             Pattern origin: Based on voice conversation & streak data
           </div>
         </div>

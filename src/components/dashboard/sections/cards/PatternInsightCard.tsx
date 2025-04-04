@@ -82,12 +82,12 @@ const PatternInsightCard: React.FC<PatternInsightCardProps> = ({
   
   return (
     <div className="overflow-hidden border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 rounded-lg border">
-      <div className="p-6">
-        <div className="flex items-start justify-between mb-5">
+      <div className="p-4">
+        <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-lg font-bold">{statusIcon}</span>
-              <h3 className="text-lg font-bold text-gray-900">{insightTitle}</h3>
+              <h3 className="text-lg font-semibold text-gray-900">{insightTitle}</h3>
             </div>
             
             {tags.length > 0 && (
@@ -113,7 +113,7 @@ const PatternInsightCard: React.FC<PatternInsightCardProps> = ({
           </TooltipProvider>
         </div>
         
-        <div className="space-y-4 mb-5">
+        <div className="space-y-3">
           <div className="flex gap-2">
             <div className={cn(
               "p-1.5 rounded-full flex-shrink-0 mt-0.5",
@@ -124,19 +124,19 @@ const PatternInsightCard: React.FC<PatternInsightCardProps> = ({
               {categoryIcon}
             </div>
             <div>
-              <p className="text-gray-700 font-medium">Behavioral Pattern Detected:</p>
-              <p className="text-gray-600">{pattern}</p>
+              <p className="text-sm font-medium text-gray-700">Behavioral Pattern Detected:</p>
+              <p className="text-sm text-gray-600">{pattern}</p>
             </div>
           </div>
           
           <div className="pl-8">
-            <p className="text-gray-700 font-medium">Observed Result:</p>
-            <p className="text-gray-600">{result}</p>
+            <p className="text-sm font-medium text-gray-700">Observed Result:</p>
+            <p className="text-sm text-gray-600">{result}</p>
           </div>
           
           <div className="pl-8">
-            <p className="text-gray-700 font-medium">Suggested Action:</p>
-            <p className="text-gray-600">{suggestion}</p>
+            <p className="text-sm font-medium text-gray-700">Suggested Action:</p>
+            <p className="text-sm text-gray-600">{suggestion}</p>
           </div>
         </div>
       </div>

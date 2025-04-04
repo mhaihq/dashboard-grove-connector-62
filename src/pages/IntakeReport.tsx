@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { Moon, BatteryFull, Brain, Heart, Users, Activity, UtensilsCrossed, Weight, Shield, Coffee } from 'lucide-react';
+import { Moon, BatteryFull, Brain, Heart, Users, Activity, UtensilsCrossed, Weight, Coffee } from 'lucide-react';
 import { DashboardHeader } from '@/components/DashboardHeader';
 import { MentalHealthSummary } from '@/components/MentalHealthSummary';
 import { HealthMetrics } from '@/components/HealthMetrics';
 import { ProgressSection } from '@/components/ProgressSection';
 import WellnessBanner from '@/components/intake/WellnessBanner';
 import IntakeReportHeader from '@/components/intake/IntakeReportHeader';
-import { getIntakeData, MetricItem } from '@/components/intake/IntakeSummaryData';
+import { getIntakeData } from '@/components/intake/IntakeSummaryData';
 
 const IntakeReport = () => {
   const userName = "Matteo";
@@ -16,7 +16,13 @@ const IntakeReport = () => {
   // Get data from our utility function
   const { summaryItems, metrics: metricItems, recommendations } = getIntakeData();
   
-  // Add icons to the metrics data
+  // Transform summaryItems for MentalHealthSummary component
+  const transformedSummaryItems = summaryItems.map(item => ({
+    ...item,
+    content: item.content.split('. ').filter(Boolean) // Convert content string to array
+  }));
+  
+  // Add icons to the metrics data and ensure correct type
   const metrics = metricItems.map(metric => {
     const iconMap: Record<string, React.ReactNode> = {
       "Sleep Quality": <Moon className="w-5 h-5 text-indigo-500" />,
@@ -30,10 +36,12 @@ const IntakeReport = () => {
       "Hydration": <Coffee className="w-5 h-5 text-brown-500" />
     };
     
+    // Convert numeric value to string for MetricProps compatibility
     return {
       ...metric,
+      value: metric.value ? String(metric.value) : undefined,
       icon: iconMap[metric.title] || null
-    } as MetricItem;
+    };
   });
 
   return (
@@ -53,7 +61,7 @@ const IntakeReport = () => {
               userName={userName}
               userEmail={userEmail}
               date="February 13, 2025"
-              summaryItems={summaryItems}
+              summaryItems={transformedSummaryItems}
             />
             
             <HealthMetrics metrics={metrics} />
