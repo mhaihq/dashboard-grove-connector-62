@@ -5,12 +5,30 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Trophy, Check, Calendar } from 'lucide-react';
+import { Trophy, Check, Calendar, Plus } from 'lucide-react';
 import { formattedGoals } from '@/data/goals/goalsData';
 import { goalCategories } from '@/data/goals/goalsData';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from '@/components/ui/sheet';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { FormattedGoal } from '@/types/goals';
+import { toast } from 'sonner';
 
 const Goals = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All Goals");
+  const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
+  const isMobile = useIsMobile();
+  
+  // New goal state
+  const [newGoal, setNewGoal] = useState({
+    title: '',
+    description: '',
+    category: 'Physical Health',
+    target: 5,
+    durationMonths: 3
+  });
   
   const filteredGoals = selectedCategory === "All Goals" 
     ? formattedGoals 
@@ -37,11 +55,63 @@ const Goals = () => {
     }
   };
   
+  const handleCreateGoal = () => {
+    // Would typically make an API call here
+    
+    // Mock creating a new goal
+    const today = new Date();
+    const endDate = new Date();
+    endDate.setMonth(today.getMonth() + newGoal.durationMonths);
+    
+    const goalToAdd: Partial<FormattedGoal> = {
+      id: formattedGoals.length + 1,
+      title: newGoal.title,
+      description: newGoal.description,
+      category: newGoal.category,
+      target: newGoal.target,
+      progress: 0,
+      start_date: today.toISOString(),
+      end_date: endDate.toISOString(),
+      origin: 'PATIENT',
+      status: 'ACTIVE',
+      source: 'Personal',
+      current_streak: 0,
+      longest_streak: 0,
+      duration_type: newGoal.durationMonths <= 1 ? 'SHORT' : 
+                  newGoal.durationMonths <= 6 ? 'MEDIUM' : 'LONG',
+    };
+    
+    // In a real app, we would save this to the backend
+    
+    // Close dialog and reset form
+    setIsAddGoalOpen(false);
+    setNewGoal({
+      title: '',
+      description: '',
+      category: 'Physical Health',
+      target: 5,
+      durationMonths: 3
+    });
+    
+    toast.success("Goal created successfully!");
+  };
+  
+  const GoalDialog = isMobile ? Sheet : Dialog;
+  const GoalDialogContent = isMobile ? SheetContent : DialogContent;
+  const GoalDialogHeader = isMobile ? SheetHeader : DialogHeader;
+  const GoalDialogTitle = isMobile ? SheetTitle : DialogTitle;
+  const GoalDialogDescription = isMobile ? SheetDescription : DialogDescription;
+  const GoalDialogFooter = isMobile ? SheetFooter : DialogFooter;
+  
   return (
     <div className="container mx-auto py-8 px-4">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
         <h1 className="text-3xl font-bold">Your Goals</h1>
-        <Button className="bg-hana-green hover:bg-hana-green/90 text-white">
+        <Button 
+          className="bg-hana-green hover:bg-hana-green/90 text-white"
+          onClick={() => setIsAddGoalOpen(true)}
+        >
+          <Plus className="w-4 h-4 mr-1" />
           Add New Goal
         </Button>
       </div>
@@ -53,6 +123,7 @@ const Goals = () => {
             variant={selectedCategory === category ? "default" : "outline"}
             onClick={() => setSelectedCategory(category)}
             className={selectedCategory === category ? "bg-hana-green hover:bg-hana-green/90" : ""}
+            size="sm"
           >
             {category}
           </Button>
@@ -62,13 +133,10 @@ const Goals = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {filteredGoals.map(goal => {
           const progressPercentage = Math.round((goal.progress / goal.target) * 100);
-          const weeklyProgressPercentage = Math.round((goal.thisWeekProgress / goal.weeklyTarget) * 100) || 0;
-          const currentStreak = goal.currentWeeklyStreak || 0;
-          const longestStreak = goal.longest_streak || 0;
-          const lastCheckIn = goal.last_check_in_date ? new Date(goal.last_check_in_date).toLocaleDateString() : "No check-ins yet";
+          const currentStreak = goal.current_streak || 0;
           
           return (
-            <Card key={goal.id} className="overflow-hidden">
+            <Card key={goal.id} className="overflow-hidden hover:shadow-md transition-shadow">
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
                   <CardTitle className="text-lg font-semibold line-clamp-2 leading-tight">
@@ -93,60 +161,19 @@ const Goals = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                {/* Streak Information */}
-                <div className="mb-4 border rounded-lg p-3 bg-amber-50">
-                  <div className="flex justify-between items-center mb-2">
-                    <div className="flex items-center">
-                      <Trophy className="w-4 h-4 text-amber-500 mr-1" />
-                      <span className="text-sm font-medium text-amber-800">Streak Information</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Badge 
-                        variant="outline" 
-                        className="bg-amber-100 text-amber-800 border-amber-200"
-                      >
-                        {currentStreak} day streak
-                      </Badge>
-                    </div>
+                {/* Simplified Streak Information */}
+                {currentStreak > 0 && (
+                  <div className="mb-4 flex items-center gap-2">
+                    <Trophy className="w-4 h-4 text-amber-500" />
+                    <span className="text-sm font-medium text-amber-800">{currentStreak} day streak</span>
                   </div>
-                  
-                  <div className="grid grid-cols-2 gap-2 mt-2">
-                    <div className="text-xs text-amber-800 border-r border-amber-200 pr-2">
-                      <span className="font-medium">Current Streak:</span> {currentStreak} days
-                    </div>
-                    <div className="text-xs text-amber-800 pl-2">
-                      <span className="font-medium">Longest Streak:</span> {longestStreak} days
-                    </div>
-                    <div className="text-xs text-amber-800 border-r border-amber-200 pr-2">
-                      <span className="font-medium">Weekly Target:</span> {goal.weeklyTarget} actions
-                    </div>
-                    <div className="text-xs text-amber-800 pl-2">
-                      <span className="font-medium">Last Check-in:</span> {lastCheckIn}
-                    </div>
-                  </div>
-                  
-                  {/* Weekly Progress Bar */}
-                  <div className="mt-3">
-                    <div className="flex justify-between items-center mt-2 mb-1">
-                      <div className="text-xs text-amber-800">
-                        {goal.thisWeekProgress} / {goal.weeklyTarget} this week
-                      </div>
-                      <div className="text-xs font-medium text-amber-800">
-                        {weeklyProgressPercentage}%
-                      </div>
-                    </div>
-                    <Progress 
-                      value={weeklyProgressPercentage} 
-                      className="h-1.5 bg-amber-200"
-                    />
-                  </div>
-                </div>
+                )}
 
                 {/* Overall Progress */}
                 <div className="pt-2">
                   <div className="flex justify-between items-center mb-1">
                     <div className="text-sm text-gray-600">
-                      Overall: {goal.progress} / {goal.target}
+                      {goal.progress} / {goal.target}
                     </div>
                     <div 
                       className={cn(
@@ -165,7 +192,8 @@ const Goals = () => {
                 </div>
                 
                 <div className="mt-4">
-                  <div className="text-sm text-gray-600 mb-1">
+                  <div className="text-sm text-gray-600 mb-1 flex items-center">
+                    <Calendar className="w-3 h-3 mr-1" />
                     {new Date(goal.start_date).toLocaleDateString()} - {new Date(goal.end_date).toLocaleDateString()}
                   </div>
                   
@@ -186,6 +214,93 @@ const Goals = () => {
           <p className="text-gray-600">No goals found in this category.</p>
         </div>
       )}
+      
+      {/* Add Goal Dialog/Sheet (responsive) */}
+      <GoalDialog open={isAddGoalOpen} onOpenChange={setIsAddGoalOpen}>
+        <GoalDialogContent className="sm:max-w-[500px]">
+          <GoalDialogHeader>
+            <GoalDialogTitle>Create New Goal</GoalDialogTitle>
+            <GoalDialogDescription>
+              Add a new personal goal to track your progress
+            </GoalDialogDescription>
+          </GoalDialogHeader>
+          
+          <div className="py-4 space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="title" className="text-sm font-medium">Goal Title</label>
+              <Input 
+                id="title"
+                placeholder="Enter goal title"
+                value={newGoal.title}
+                onChange={(e) => setNewGoal({...newGoal, title: e.target.value})}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <label htmlFor="description" className="text-sm font-medium">Description</label>
+              <Textarea 
+                id="description"
+                placeholder="Enter a brief description"
+                value={newGoal.description}
+                onChange={(e) => setNewGoal({...newGoal, description: e.target.value})}
+                rows={3}
+              />
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label htmlFor="category" className="text-sm font-medium">Category</label>
+                <select 
+                  id="category"
+                  className="w-full p-2 border rounded-md"
+                  value={newGoal.category}
+                  onChange={(e) => setNewGoal({...newGoal, category: e.target.value})}
+                >
+                  {goalCategories.filter(c => c !== "All Goals").map(category => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
+                </select>
+              </div>
+              
+              <div className="space-y-2">
+                <label htmlFor="target" className="text-sm font-medium">Target (Actions)</label>
+                <Input 
+                  id="target"
+                  type="number"
+                  min="1"
+                  placeholder="How many actions to complete"
+                  value={newGoal.target}
+                  onChange={(e) => setNewGoal({...newGoal, target: parseInt(e.target.value) || 1})}
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <label htmlFor="duration" className="text-sm font-medium">Duration (Months)</label>
+              <Input 
+                id="duration"
+                type="number"
+                min="1"
+                max="24"
+                placeholder="How many months"
+                value={newGoal.durationMonths}
+                onChange={(e) => setNewGoal({...newGoal, durationMonths: parseInt(e.target.value) || 1})}
+              />
+            </div>
+          </div>
+          
+          <GoalDialogFooter>
+            <Button variant="outline" onClick={() => setIsAddGoalOpen(false)}>Cancel</Button>
+            <Button 
+              onClick={handleCreateGoal}
+              disabled={!newGoal.title || newGoal.target < 1}
+              className="bg-hana-green hover:bg-hana-green/90"
+            >
+              Create Goal
+            </Button>
+          </GoalDialogFooter>
+        </GoalDialogContent>
+      </GoalDialog>
     </div>
   );
 };

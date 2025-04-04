@@ -88,10 +88,10 @@ const GoalStreakSection: React.FC<GoalStreakSectionProps> = ({ goals }) => {
         </div>
         
         {streakDays > 0 && (
-          <div className="mb-4 p-3 border border-amber-200 bg-amber-50 rounded-lg">
+          <div className="mb-4 p-2 border border-amber-200 bg-amber-50 rounded-lg">
             <div className="flex items-center gap-2">
               <Trophy className="w-4 h-4 text-amber-500" />
-              <p className="text-sm font-medium text-amber-800">
+              <p className="text-sm text-amber-800 truncate">
                 Longest streak: <span className="font-semibold">{streakDays} days</span> on "{streakGoalName}"
               </p>
             </div>
@@ -171,23 +171,14 @@ const GoalStreakSection: React.FC<GoalStreakSectionProps> = ({ goals }) => {
                   <Progress value={progressPercent} className="h-1.5" />
                 </div>
                 
-                <div className="mt-3 flex justify-between items-center">
-                  {currentStreak > 0 && (
+                {currentStreak > 0 && (
+                  <div className="mt-2 flex">
                     <div className="bg-amber-50 rounded-full px-2 py-0.5 text-xs text-amber-700 flex items-center">
                       <Trophy className="w-3 h-3 mr-1 text-amber-500" />
                       {currentStreak} day streak
                     </div>
-                  )}
-                  
-                  <div className={cn(
-                    "text-xs font-medium rounded-full px-2 py-0.5 ml-auto",
-                    goal.difficulty === "easy" ? "bg-green-50 text-green-700" :
-                    goal.difficulty === "moderate" ? "bg-amber-50 text-amber-700" :
-                    "bg-red-50 text-red-700"
-                  )}>
-                    {goal.difficulty}
                   </div>
-                </div>
+                )}
               </div>
             );
           })}
