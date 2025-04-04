@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Activity, Sparkles, TrendingUp, AlertTriangle, ArrowUp, ArrowDown, ArrowRight, Calendar, Info } from 'lucide-react';
+import { Activity, Sparkles, TrendingUp, AlertTriangle, ArrowUp, ArrowDown, ArrowRight, Calendar, Info, Circle, CircleDot } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
@@ -80,6 +80,7 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
   habitTrends = []
 }) => {
   const [currentInsight, setCurrentInsight] = useState(0);
+  const [api, setApi] = useState<any>(null);
   
   const improving = data.filter(item => item.improving);
   const needsWork = data.filter(item => !item.improving);
@@ -141,8 +142,29 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
     }
   };
 
-  const handleSliderChange = (value: number[]) => {
-    setCurrentInsight(value[0]);
+  // Auto-rotate carousel every 2 seconds
+  useEffect(() => {
+    if (!api || weeklyInsights.length <= 1) return;
+    
+    const intervalId = setInterval(() => {
+      const currentIndex = api.selectedScrollSnap();
+      const nextIndex = (currentIndex + 1) % weeklyInsights.length;
+      api.scrollTo(nextIndex);
+      setCurrentInsight(nextIndex);
+    }, 2000);
+    
+    return () => clearInterval(intervalId);
+  }, [api, weeklyInsights.length]);
+  
+  // Handle API setup for the carousel
+  const handleApiChange = (newApi: any) => {
+    if (!newApi) return;
+    
+    setApi(newApi);
+    
+    newApi.on("select", () => {
+      setCurrentInsight(newApi.selectedScrollSnap());
+    });
   };
 
   return (
@@ -298,18 +320,11 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-base font-medium text-gray-800">This Week's Key Patterns</h3>
-            <span className="text-xs text-gray-500">
-              Pattern {currentInsight + 1} of {weeklyInsights.length}
-            </span>
           </div>
           
           <Carousel
             className="w-full"
-            onSelect={(api) => {
-              if (api) {
-                setCurrentInsight(api.selectedScrollSnap());
-              }
-            }}
+            setApi={handleApiChange}
           >
             <CarouselContent>
               {weeklyInsights.map((insight, index) => (
@@ -327,13 +342,26 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <div className="flex items-center justify-center mt-4">
-              <CarouselPrevious className="static transform-none mx-2" />
-              <CarouselNext className="static transform-none mx-2" />
-            </div>
           </Carousel>
           
-          <div className="mt-2 text-xs text-gray-500">
+          {/* Carousel indicators (dots) */}
+          <div className="flex items-center justify-center mt-3">
+            {weeklyInsights.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => api?.scrollTo(index)}
+                className="mx-1 focus:outline-none"
+              >
+                {index === currentInsight ? (
+                  <CircleDot className="w-4 h-4 text-blue-600" />
+                ) : (
+                  <Circle className="w-4 h-4 text-gray-300" />
+                )}
+              </button>
+            ))}
+          </div>
+          
+          <div className="mt-3 text-xs text-gray-500 text-center">
             Pattern origin: Based on voice conversation & streak data
           </div>
         </div>
