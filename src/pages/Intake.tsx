@@ -1,7 +1,7 @@
 
 import React from 'react';
 import DashboardHeader from '@/components/DashboardHeader';
-import CallTypeSelector from '@/components/CallTypeSelector';
+import { CallTypeSelector } from '@/components/CallTypeSelector';
 
 const Intake = () => {
   const [selectedCallType, setSelectedCallType] = React.useState<string | null>(null);
