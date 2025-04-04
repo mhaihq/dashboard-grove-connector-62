@@ -5,18 +5,119 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { t, getCategoryKey, getStatusKey, getDurationKey, getOriginKey, setLanguage, getCurrentLanguage, LANGUAGES } from '@/lib/i18n';
-import { goals, goalCategories } from '@/data/goals/goalsData';
-import { FormattedGoal } from '@/types/goals';
+
+// Updated sample data to match the new schema
+const sampleGoals = [
+  {
+    id: 1,
+    user_id: 1,
+    title: "Practice Mindfulness Daily",
+    duration_type: "SHORT",
+    start_date: "2025-04-01",
+    end_date: "2025-04-14",
+    target: 7,
+    progress: 5,
+    description: "Practice mindfulness meditation for at least 10 minutes each day",
+    origin: "HANA",
+    status: "ACTIVE",
+    created_at: "2025-04-01T00:00:00Z",
+    updated_at: "2025-04-07T00:00:00Z",
+    // Added for UI compatibility
+    category: "Lifestyle",
+    source: "Hana Suggested",
+    difficulty: "hard" as const,
+    term: "short term" as const
+  },
+  {
+    id: 2,
+    user_id: 1,
+    title: "Maintain Regular Sleep Schedule",
+    duration_type: "MEDIUM",
+    start_date: "2025-03-25",
+    end_date: "2025-04-25",
+    target: 8,
+    progress: 6,
+    description: "Go to bed and wake up at consistent times to achieve 8 hours of sleep",
+    origin: "PATIENT",
+    status: "ACTIVE",
+    created_at: "2025-03-25T00:00:00Z",
+    updated_at: "2025-04-10T00:00:00Z",
+    // Added for UI compatibility
+    category: "Lifestyle",
+    source: "Personal",
+    difficulty: "hard" as const,
+    term: "medium term" as const
+  },
+  {
+    id: 3,
+    user_id: 1,
+    title: "Go to the Gym 2 times each week",
+    duration_type: "SHORT",
+    start_date: "2025-04-01",
+    end_date: "2025-04-14",
+    target: 4,
+    progress: 2,
+    description: "Visit the gym and complete a full workout session twice weekly",
+    origin: "PATIENT",
+    status: "ACTIVE",
+    created_at: "2025-04-01T00:00:00Z",
+    updated_at: "2025-04-07T00:00:00Z",
+    // Added for UI compatibility
+    category: "Physical Health",
+    source: "Personal",
+    difficulty: "hard" as const,
+    term: "short term" as const
+  },
+  {
+    id: 4,
+    user_id: 1,
+    title: "Weekly Social Connection",
+    duration_type: "LONG",
+    start_date: "2025-04-01",
+    end_date: "2025-06-01",
+    target: 8,
+    progress: 0,
+    description: "Schedule at least one meaningful social interaction per week",
+    origin: "HANA",
+    status: "ACTIVE",
+    created_at: "2025-04-01T00:00:00Z",
+    updated_at: "2025-04-01T00:00:00Z",
+    // Added for UI compatibility
+    category: "Social",
+    source: "Hana Suggested",
+    difficulty: "hard" as const,
+    term: "medium term" as const
+  }
+];
+
+// Updated categories to match our sample data
+const goalCategories = [
+  "All Goals",
+  "Lifestyle",
+  "Physical Health",
+  "Social",
+  "Coping Skills",
+  "Medication",
+  "Therapy"
+];
 
 const Goals = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All Goals");
-  const [currentLang, setCurrentLang] = useState(getCurrentLanguage());
   
   const filteredGoals = selectedCategory === "All Goals" 
-    ? goals 
-    : goals.filter(goal => goal.category === selectedCategory);
+    ? sampleGoals 
+    : sampleGoals.filter(goal => goal.category === selectedCategory);
   
+  // Helper function to map duration_type to UI term
+  const getDurationLabel = (durationType: string) => {
+    switch(durationType) {
+      case 'SHORT': return 'Short Term';
+      case 'MEDIUM': return 'Medium Term';
+      case 'LONG': return 'Long Term';
+      default: return 'Unknown';
+    }
+  };
+
   // Helper function to map status to UI badge color
   const getStatusColor = (status: string) => {
     switch(status) {
@@ -27,36 +128,14 @@ const Goals = () => {
       default: return 'bg-gray-100 text-gray-800';
     }
   };
-
-  // Change language handler
-  const handleLanguageChange = (lang: string) => {
-    setLanguage(lang);
-    setCurrentLang(lang);
-  };
   
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold">{t('goals.title')}</h1>
-        <div className="flex gap-2">
-          {/* Language selector */}
-          <div className="mr-4 flex items-center gap-2">
-            {Object.entries(LANGUAGES).map(([code, name]) => (
-              <Button
-                key={code}
-                variant={currentLang === code ? "default" : "outline"}
-                size="sm"
-                onClick={() => handleLanguageChange(code)}
-                className={currentLang === code ? "bg-blue-500 hover:bg-blue-600" : ""}
-              >
-                {name}
-              </Button>
-            ))}
-          </div>
-          <Button className="bg-hana-green hover:bg-hana-green/90 text-white">
-            {t('goals.addNew')}
-          </Button>
-        </div>
+        <h1 className="text-3xl font-bold">Your Goals</h1>
+        <Button className="bg-hana-green hover:bg-hana-green/90 text-white">
+          Add New Goal
+        </Button>
       </div>
       
       <div className="flex gap-2 mb-6 flex-wrap">
@@ -67,13 +146,13 @@ const Goals = () => {
             onClick={() => setSelectedCategory(category)}
             className={selectedCategory === category ? "bg-hana-green hover:bg-hana-green/90" : ""}
           >
-            {t(getCategoryKey(category))}
+            {category}
           </Button>
         ))}
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {filteredGoals.map((goal: FormattedGoal) => {
+        {filteredGoals.map(goal => {
           const progressPercentage = Math.round((goal.progress / goal.target) * 100);
           
           return (
@@ -89,15 +168,15 @@ const Goals = () => {
                       goal.origin === 'HANA' ? 'bg-blue-100 text-blue-800 hover:bg-blue-200' : 'border-gray-200'
                     )}
                   >
-                    {t(getOriginKey(goal.origin))}
+                    {goal.origin === 'HANA' ? 'Hana Suggested' : 'Personal'}
                   </Badge>
                 </div>
                 <div className="flex gap-2 mt-2">
                   <Badge variant="outline" className={cn(getStatusColor(goal.status))}>
-                    {t(getStatusKey(goal.status))}
+                    {goal.status}
                   </Badge>
                   <Badge variant="outline" className="bg-purple-100 text-purple-800">
-                    {t(getDurationKey(goal.duration_type))}
+                    {getDurationLabel(goal.duration_type)}
                   </Badge>
                 </div>
               </CardHeader>
@@ -125,7 +204,7 @@ const Goals = () => {
                 
                 <div className="mt-4">
                   <div className="text-sm text-gray-600 mb-1">
-                    {new Date(goal.start_date).toLocaleDateString(currentLang.replace('_', '-'))} - {new Date(goal.end_date).toLocaleDateString(currentLang.replace('_', '-'))}
+                    {new Date(goal.start_date).toLocaleDateString()} - {new Date(goal.end_date).toLocaleDateString()}
                   </div>
                   
                   {goal.description && (
@@ -142,7 +221,7 @@ const Goals = () => {
       
       {filteredGoals.length === 0 && (
         <div className="bg-gray-50 p-8 rounded-lg text-center">
-          <p className="text-gray-600">{t('goals.noGoals')}</p>
+          <p className="text-gray-600">No goals found in this category.</p>
         </div>
       )}
     </div>
