@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Activity, Sparkles, TrendingUp, AlertTriangle, ArrowUp, ArrowDown, ArrowRight, Calendar, Info, Brain } from 'lucide-react';
+import { Activity, Sparkles, TrendingUp, AlertTriangle, ArrowUp, ArrowDown, ArrowRight, Calendar, Info } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
+import { Slider } from '@/components/ui/slider';
 import {
   Radar,
   RadarChart,
@@ -73,16 +74,6 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
 }) => {
   const [currentInsight, setCurrentInsight] = useState(0);
   
-  useEffect(() => {
-    if (weeklyInsights.length <= 1) return;
-    
-    const interval = setInterval(() => {
-      setCurrentInsight(prev => (prev + 1) % weeklyInsights.length);
-    }, 8000);
-    
-    return () => clearInterval(interval);
-  }, [weeklyInsights.length]);
-  
   const improving = data.filter(item => item.improving);
   const needsWork = data.filter(item => !item.improving);
   
@@ -141,6 +132,10 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
       default:
         return <ArrowRight className="w-3 h-3 text-gray-500" />;
     }
+  };
+
+  const handleSliderChange = (value: number[]) => {
+    setCurrentInsight(value[0]);
   };
 
   return (
@@ -294,24 +289,39 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
         </div>
         
         <div className="bg-white rounded-lg border border-gray-200 p-4">
-          <div className="flex items-center mb-3">
-            <h3 className="text-base font-medium text-gray-800">This Week's Key Pattern</h3>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-base font-medium text-gray-800">This Week's Key Patterns</h3>
+            <span className="text-xs text-gray-500">
+              Pattern {currentInsight + 1} of {weeklyInsights.length}
+            </span>
           </div>
           
           <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
-            <div className="flex items-start">
-              <Brain className="w-5 h-5 text-blue-600 mr-2 mt-0.5" />
-              <div>
-                <p className="text-blue-800 font-medium">
-                  {weeklyInsights[currentInsight]}
-                </p>
-                <p className="mt-3 text-sm text-blue-700 flex items-center">
-                  <span className="mr-1">📍</span>
-                  This was mentioned in 3 of your last 4 calls.
-                </p>
-              </div>
+            <div>
+              <p className="text-blue-800 font-medium">
+                {weeklyInsights[currentInsight]}
+              </p>
+              <p className="mt-3 text-sm text-blue-700">
+                This was mentioned in 3 of your last 4 calls.
+              </p>
             </div>
           </div>
+          
+          {weeklyInsights.length > 1 && (
+            <div className="mt-4 px-2">
+              <Slider
+                value={[currentInsight]}
+                max={weeklyInsights.length - 1}
+                step={1}
+                onValueChange={handleSliderChange}
+                className="w-full"
+              />
+              <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <span>Pattern 1</span>
+                <span>Pattern {weeklyInsights.length}</span>
+              </div>
+            </div>
+          )}
           
           <div className="mt-2 text-xs text-gray-500">
             Pattern origin: Based on voice conversation & streak data

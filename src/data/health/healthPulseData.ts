@@ -45,7 +45,9 @@ export const healthPulseData: HealthPulseItem[] = [
 export const weeklyInsights = [
   "You report less stress on days with evening routines and 7+ hours of sleep.",
   "Stress is lower on days with a structured evening routine.",
-  "Mood stabilized on days with social interaction."
+  "Mood stabilized on days with social interaction.",
+  "Your energy levels are higher when you exercise before noon.",
+  "Your sleep quality improves on nights when you avoid screen time 1+ hour before bed."
 ];
 
 export const improvementSummaries = [
