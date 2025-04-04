@@ -1,4 +1,3 @@
-
 export interface Goal {
   id: string;
   title: string;
@@ -19,7 +18,7 @@ export interface Goal {
   nudge?: string;
   evidence?: string;
   benefits?: string[];
-  difficulty?: 'easy' | 'medium' | 'hard';
+  difficulty?: 'hard';
   term?: 'short term' | 'medium term' | 'long term';
   description?: string;
 }

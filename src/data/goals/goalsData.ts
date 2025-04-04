@@ -1,4 +1,3 @@
-
 import { Goal } from "@/types/goals";
 
 export const goals: Goal[] = [
@@ -32,7 +31,7 @@ export const goals: Goal[] = [
       "Improved focus throughout the day",
       "Better emotional regulation"
     ],
-    difficulty: "easy",
+    difficulty: "hard",
     term: "short term"
   },
   {
@@ -65,7 +64,7 @@ export const goals: Goal[] = [
       "Improved cognitive function",
       "Better mood regulation"
     ],
-    difficulty: "medium",
+    difficulty: "hard",
     term: "medium term"
   },
   {
@@ -93,7 +92,7 @@ export const goals: Goal[] = [
       "Better cardiovascular health",
       "Increased energy levels"
     ],
-    difficulty: "medium",
+    difficulty: "hard",
     term: "short term"
   },
   {
@@ -115,7 +114,7 @@ export const goals: Goal[] = [
       "Reduced feelings of isolation",
       "Improved mood and energy"
     ],
-    difficulty: "medium",
+    difficulty: "hard",
     term: "medium term"
   },
   {
@@ -137,7 +136,7 @@ export const goals: Goal[] = [
       "Improved focus throughout the day",
       "Better emotional regulation"
     ],
-    difficulty: "easy",
+    difficulty: "hard",
     term: "short term"
   },
   {
@@ -165,7 +164,7 @@ export const goals: Goal[] = [
       "Reduced symptom fluctuations",
       "Better overall management"
     ],
-    difficulty: "medium",
+    difficulty: "hard",
     term: "long term"
   },
   {
@@ -193,7 +192,7 @@ export const goals: Goal[] = [
       "Increased self-awareness",
       "Improved ability to track progress"
     ],
-    difficulty: "medium",
+    difficulty: "hard",
     term: "medium term"
   }
 ];
@@ -219,7 +218,7 @@ export const suggestedGoals: Partial<Goal>[] = [
       "Improved focus throughout the day",
       "Better emotional regulation"
     ],
-    difficulty: "easy",
+    difficulty: "hard",
     term: "short term"
   },
   {
@@ -232,7 +231,7 @@ export const suggestedGoals: Partial<Goal>[] = [
       "Reduced feelings of isolation",
       "Improved mood and energy"
     ],
-    difficulty: "medium",
+    difficulty: "hard",
     term: "medium term"
   }
 ];
