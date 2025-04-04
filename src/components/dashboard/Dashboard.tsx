@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import DashboardHeader from '@/components/DashboardHeader';
-import ProgressSection from '@/components/ProgressSection';
 import UpcomingActions from '@/components/UpcomingActions';
 import JourneySoFarSection from './sections/JourneySoFarSection';
 import { Check, Clock, CalendarClock, Bell, Award, Target } from 'lucide-react';
@@ -130,9 +129,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
             <div className="mb-8">
               <JourneySoFarSection />
             </div>
-            
-            {/* Progress Section */}
-            <ProgressSection recommendations={recommendations} />
           </div>
           
           <div className="space-y-6">
