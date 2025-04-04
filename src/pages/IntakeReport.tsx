@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Moon, BatteryFull, Brain, Heart, Users, Activity, UtensilsCrossed, Weight, Shield, Coffee } from 'lucide-react';
+import { Moon, BatteryFull, Brain, Heart, Users, Activity, UtensilsCrossed, Weight, Coffee } from 'lucide-react';
 import { DashboardHeader } from '@/components/DashboardHeader';
 import { MentalHealthSummary } from '@/components/MentalHealthSummary';
 import { HealthMetrics } from '@/components/HealthMetrics';
