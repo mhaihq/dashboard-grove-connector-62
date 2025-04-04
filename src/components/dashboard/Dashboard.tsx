@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import DashboardHeader from '@/components/DashboardHeader';
 import ProgressSection from '@/components/ProgressSection';
@@ -5,8 +6,10 @@ import UpcomingActions from '@/components/UpcomingActions';
 import JourneySoFarSection from './sections/JourneySoFarSection';
 import { Check, Clock, CalendarClock, Bell } from 'lucide-react';
 import HealthPulseSection from './sections/HealthPulseSection';
+import RecommendationsSection from './sections/RecommendationsSection';
 import { healthPulseData } from '@/data/health/healthPulseData';
 import { HealthPulseItem } from '@/types/dashboard';
+import { journalEntries } from '@/data/health/journalEntries';
 
 interface DashboardProps {
   onScheduleCall?: () => void;
@@ -81,6 +84,44 @@ export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
     }
   ];
 
+  // Mock Medicare programs data for the RecommendationsSection
+  const medicarePrograms = [
+    {
+      name: "Medicare Wellness Visit",
+      originalName: "Annual Wellness Visit",
+      description: "Yearly visit to develop or update a personalized prevention plan",
+      eligibility: "All Medicare Part B beneficiaries",
+      coverage: "Fully covered once every 12 months",
+      benefits: [
+        "Personalized health advice",
+        "Health risk assessment",
+        "Routine measurements"
+      ],
+      icon: "clipboard",
+      isEligible: true
+    },
+    {
+      name: "Preventive Services",
+      originalName: "Medicare Preventive Services",
+      description: "Various screenings and preventive services",
+      eligibility: "Varies by service",
+      coverage: "Most preventive services fully covered",
+      benefits: [
+        "Cancer screenings",
+        "Vaccines",
+        "Cardiovascular screenings"
+      ],
+      icon: "shield",
+      isEligible: true
+    }
+  ];
+
+  const handleScheduleCallClick = () => {
+    if (onScheduleCall) {
+      onScheduleCall();
+    }
+  };
+
   return (
     <div className="bg-gray-50 min-h-screen">
       <DashboardHeader 
@@ -108,6 +149,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
                   "Morning sunlight exposure helps regulate sleep cycles"
                 ]
               }}
+            />
+            
+            {/* Health Insights Section - New section */}
+            <RecommendationsSection
+              recommendations={recommendations}
+              medicarePrograms={medicarePrograms}
+              onScheduleCall={handleScheduleCallClick}
             />
             
             {/* Journey Roadmap */}

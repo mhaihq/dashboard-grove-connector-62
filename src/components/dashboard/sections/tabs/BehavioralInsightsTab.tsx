@@ -16,7 +16,7 @@ const BehavioralInsightsTab: React.FC = () => {
         </div>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <PatternInsightCard
           insightTitle="Better Sleep When Waking Early"
           pattern="You woke before 7am on 3 days last week."
