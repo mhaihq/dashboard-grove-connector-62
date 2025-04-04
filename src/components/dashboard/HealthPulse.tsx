@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Activity, Sparkles, TrendingUp, AlertTriangle, ArrowUp, ArrowDown, ArrowRight, Calendar, Info, Brain } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -147,7 +146,6 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
   return (
     <TooltipProvider>
       <div className="grid grid-cols-1 gap-6">
-        {/* Health Pattern Overview */}
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-base font-medium text-gray-800">Health Pattern Overview</h3>
@@ -166,9 +164,8 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
             </Tooltip>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Spider Chart (moved to left) */}
-            <div className="h-[260px] w-full">
+          <div className="flex justify-center">
+            <div className="h-[260px] w-full max-w-[500px]">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart cx="50%" cy="50%" outerRadius="70%" data={formattedData}>
                   <defs>
@@ -199,7 +196,6 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
                     dataKey="area" 
                     tick={(props) => {
                       const { x, y, payload, textAnchor } = props;
-                      const item = formattedData.find(d => d.area === payload.value);
                       
                       return (
                         <g>
@@ -268,37 +264,35 @@ export const HealthPulse: React.FC<HealthPulseProps> = ({
                 </RadarChart>
               </ResponsiveContainer>
             </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+            <div className="bg-green-50 border border-green-100 rounded-lg p-3">
+              <h4 className="text-sm font-medium text-green-800 mb-2 flex items-center">
+                <Sparkles className="w-4 h-4 mr-1 text-green-600" />
+                Improvements this week:
+              </h4>
+              {improvementSummaries.map((summary, idx) => (
+                <p key={idx} className="text-sm text-green-700 mb-1">
+                  {summary}
+                </p>
+              ))}
+            </div>
             
-            {/* Improvement and Needs Attention Summaries (moved to right) */}
-            <div className="space-y-4">
-              <div className="bg-green-50 border border-green-100 rounded-lg p-3 h-1/2">
-                <h4 className="text-sm font-medium text-green-800 mb-2 flex items-center">
-                  <Sparkles className="w-4 h-4 mr-1 text-green-600" />
-                  Improvements this week:
-                </h4>
-                {improvementSummaries.map((summary, idx) => (
-                  <p key={idx} className="text-sm text-green-700 mb-1">
-                    {summary}
-                  </p>
-                ))}
-              </div>
-              
-              <div className="bg-amber-50 border border-amber-100 rounded-lg p-3 h-1/2">
-                <h4 className="text-sm font-medium text-amber-800 mb-2 flex items-center">
-                  <AlertTriangle className="w-4 h-4 mr-1 text-amber-600" />
-                  Needs attention:
-                </h4>
-                {needsAttentionSummaries.map((summary, idx) => (
-                  <p key={idx} className="text-sm text-amber-700 mb-1">
-                    {summary}
-                  </p>
-                ))}
-              </div>
+            <div className="bg-amber-50 border border-amber-100 rounded-lg p-3">
+              <h4 className="text-sm font-medium text-amber-800 mb-2 flex items-center">
+                <AlertTriangle className="w-4 h-4 mr-1 text-amber-600" />
+                Needs attention:
+              </h4>
+              {needsAttentionSummaries.map((summary, idx) => (
+                <p key={idx} className="text-sm text-amber-700 mb-1">
+                  {summary}
+                </p>
+              ))}
             </div>
           </div>
         </div>
         
-        {/* AI Insight Card - Kept this section */}
         <div className="bg-white rounded-lg border border-gray-200 p-4">
           <div className="flex items-center mb-3">
             <h3 className="text-base font-medium text-gray-800">This Week's Key Pattern</h3>

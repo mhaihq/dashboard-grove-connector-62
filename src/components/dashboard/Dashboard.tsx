@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import DashboardHeader from '@/components/DashboardHeader';
 import ProgressSection from '@/components/ProgressSection';
@@ -6,6 +5,7 @@ import UpcomingActions from '@/components/UpcomingActions';
 import JourneySoFarSection from './sections/JourneySoFarSection';
 import { Check, Clock, CalendarClock, Bell } from 'lucide-react';
 import HealthPulseSection from './sections/HealthPulseSection';
+import { healthPulseData } from '@/data/health/healthPulseData';
 import { HealthPulseItem } from '@/types/dashboard';
 
 interface DashboardProps {
@@ -15,48 +15,7 @@ interface DashboardProps {
 export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
   const userName = "Sarah";
   
-  // Health pulse data
-  const healthPulseData: HealthPulseItem[] = [
-    {
-      area: "Sleep",
-      score: 68,
-      initialScore: 60,
-      improving: true,
-      priority: true
-    },
-    {
-      area: "Social Support",
-      score: 72,
-      initialScore: 65,
-      improving: true
-    },
-    {
-      area: "Energy Level",
-      score: 65,
-      initialScore: 60,
-      improving: true
-    },
-    {
-      area: "Stress Management",
-      score: 55,
-      initialScore: 48,
-      improving: true
-    },
-    {
-      area: "Cognitive Function",
-      score: 42,
-      initialScore: 40,
-      improving: true
-    },
-    {
-      area: "Emotional Regulation",
-      score: 35,
-      initialScore: 35,
-      improving: false
-    }
-  ];
-  
-  // Demo progress data
+  // Demo recommendations data
   const recommendations = [
     {
       title: "Gentle Movement",
@@ -134,7 +93,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
           <div className="lg:col-span-2 space-y-6">
             <h1 className="text-2xl font-bold text-gray-900">Welcome back, {userName}!</h1>
             
-            {/* Health Pulse Section - Replacing HealthMetrics */}
+            {/* Health Pulse Section - Using data from file */}
             <HealthPulseSection
               data={healthPulseData}
               mostImproved="Sleep"
