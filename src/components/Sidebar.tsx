@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FileText, Home, Calendar, ChevronRight, ChevronLeft, Stethoscope, Target } from 'lucide-react';
+import { FileText, Home, Calendar, ChevronRight, ChevronLeft, Stethoscope, Target, Clipboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export const Sidebar = () => {
@@ -13,6 +13,7 @@ export const Sidebar = () => {
     { icon: Home, label: 'Dashboard', path: '/' },
     { icon: Target, label: 'Goals', path: '/goals' },
     { icon: Stethoscope, label: 'Clinical Guidelines', path: '/clinical-guidelines' },
+    { icon: Clipboard, label: 'Intake', path: '/intake' },
     { icon: Calendar, label: 'Schedule Followup', path: '/schedule-followup' },
     { icon: FileText, label: 'Health Journal', path: '/followup-report' },
   ];
