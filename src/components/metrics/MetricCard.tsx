@@ -3,12 +3,14 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { TrendingUp, TrendingDown, PieChart } from 'lucide-react';
 
+export type StatusType = 'positive' | 'concerning' | 'warning' | 'neutral';
+
 export interface MetricProps {
   title: string;
   value: string | number;
   trend?: 'up' | 'down' | 'neutral';
   trendValue?: string;
-  status?: 'positive' | 'concerning' | 'warning' | 'neutral';
+  status?: StatusType;
   icon?: React.ReactNode;
   color?: string;
 }
