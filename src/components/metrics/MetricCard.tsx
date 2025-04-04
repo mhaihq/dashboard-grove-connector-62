@@ -1,72 +1,57 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { TrendingUp, TrendingDown, PieChart } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
+import ProgressBar from './ProgressBar';
+import StatusIndicator from './StatusIndicator';
 
-export type StatusType = 'positive' | 'concerning' | 'warning' | 'neutral';
+export type StatusType = 'positive' | 'mixed' | 'concerning';
 
 export interface MetricProps {
   title: string;
-  value: string | number;
-  trend?: 'up' | 'down' | 'neutral';
-  trendValue?: string;
-  status?: StatusType;
+  status: StatusType;
   icon?: React.ReactNode;
-  color?: string;
+  description?: string;
 }
 
-const MetricCard: React.FC<MetricProps> = ({
-  title,
-  value,
-  trend,
-  trendValue,
-  status = 'neutral',
-  icon = <PieChart className="w-4 h-4" />,
-  color
-}) => {
+export const MetricCard: React.FC<MetricProps> = ({ title, status, icon, description }) => {
+  const [expanded, setExpanded] = React.useState(false);
+  
   return (
-    <div className={cn(
-      "border rounded-lg p-4 bg-white transition-all hover:shadow-sm",
-      status === 'positive' ? "border-green-100" : 
-      status === 'concerning' ? "border-red-100" : 
-      status === 'warning' ? "border-amber-100" : 
-      "border-gray-100"
-    )}>
-      <div className="flex items-center justify-between mb-3">
-        <div className="text-sm font-medium text-gray-500">{title}</div>
-        <div className={cn(
-          "w-2 h-2 rounded-full",
-          status === 'positive' ? "bg-green-500" : 
-          status === 'concerning' ? "bg-red-500" : 
-          status === 'warning' ? "bg-amber-500" : 
-          "bg-gray-300"
-        )} />
+    <div className="bg-white rounded-lg border border-gray-100 p-3 hover-scale text-left">
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-2">
+          {icon}
+          <h3 className="text-base font-medium text-gray-900">{title}</h3>
+        </div>
+        <StatusIndicator status={status} />
       </div>
       
-      <div className="flex items-end justify-between">
+      <ProgressBar status={status} />
+      
+      {description && (
         <div className={cn(
-          "text-2xl font-bold",
-          status === 'positive' ? "text-green-600" : 
-          status === 'concerning' ? "text-red-600" : 
-          status === 'warning' ? "text-amber-600" : 
-          color ? `text-${color}-600` : "text-gray-900"
+          "mt-2 overflow-hidden transition-all duration-300",
+          expanded ? "max-h-40" : "max-h-0"
         )}>
-          {value}
+          <p className="text-sm text-gray-600">{description}</p>
         </div>
-        
-        {trend && (
-          <div className={cn(
-            "flex items-center text-xs font-medium",
-            trend === 'up' ? "text-green-600" : 
-            trend === 'down' ? "text-red-600" : 
-            "text-gray-500"
-          )}>
-            {trend === 'up' && <TrendingUp className="w-3 h-3 mr-1" />}
-            {trend === 'down' && <TrendingDown className="w-3 h-3 mr-1" />}
-            {trendValue}
-          </div>
-        )}
-      </div>
+      )}
+      
+      {description && (
+        <div className="mt-1 flex justify-end">
+          <button 
+            className="text-sm text-gray-500 flex items-center gap-1 hover:text-gray-900"
+            onClick={() => setExpanded(!expanded)}
+          >
+            {expanded ? "Hide Details" : "Show Details"}
+            <ChevronDown className={cn(
+              "w-4 h-4 transition-transform",
+              expanded ? "transform rotate-180" : ""
+            )} />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

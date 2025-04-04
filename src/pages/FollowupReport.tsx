@@ -1,25 +1,49 @@
 
-import React from 'react';
-import DashboardHeader from '@/components/DashboardHeader';
-import JournalEntry from '@/components/JournalEntry';
+import React, { useState } from 'react';
+import { Sidebar } from '@/components/Sidebar';
+import { DashboardHeader } from '@/components/DashboardHeader';
+import { HealthJournalTable } from '@/components/HealthJournalTable';
+import { JournalEntryModal } from '@/components/journal-modal/JournalEntryModal';
+import { HealthJournalLayout } from '@/components/health-journal/HealthJournalLayout';
+import { journalEntries } from '@/data/journalEntries';
+import { JournalEntryType } from '@/types/journal';
 
 const FollowupReport = () => {
+  const userName = "Matteo";
+  const userEmail = "matteo@matteowastaken.com";
+  
+  const [selectedEntry, setSelectedEntry] = useState<JournalEntryType | null>(null);
+  
+  const handleOpenEntry = (entry: JournalEntryType) => {
+    setSelectedEntry(entry);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedEntry(null);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <DashboardHeader userName="Alex Smith" userEmail="alex@example.com" />
+    <div className="min-h-screen bg-gray-50 flex">
+      <Sidebar />
       
-      <main className="p-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Your Follow-up Report</h1>
-        
-        <JournalEntry
-          date="March 15, 2025"
-          timestamp="2:30 PM"
-          title="Weekly Check-in"
-          content="Had a great week overall. Energy levels are improving, and I've been consistent with my evening walks. Still struggling a bit with sleep quality, but the relaxation techniques are helping somewhat."
-          highlight="Your progress with physical activity is excellent! Let's focus on improving your sleep routine next week."
-          expanded={true}
+      <div className="flex-1 ml-[70px] transition-all duration-300">
+        <DashboardHeader 
+          userName={userName} 
+          userEmail={userEmail}
         />
-      </main>
+        
+        <main className="p-8">
+          <HealthJournalLayout>
+            <HealthJournalTable journalEntries={journalEntries} onViewEntry={handleOpenEntry} />
+            
+            <JournalEntryModal 
+              entry={selectedEntry} 
+              isOpen={!!selectedEntry} 
+              onClose={handleCloseModal} 
+            />
+          </HealthJournalLayout>
+        </main>
+      </div>
     </div>
   );
 };

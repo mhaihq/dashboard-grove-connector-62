@@ -1,24 +1,22 @@
 
 import React from 'react';
-import DashboardHeader from '@/components/DashboardHeader';
-import HealthMetrics from '@/components/HealthMetrics';
+import { DashboardHeader } from '@/components/DashboardHeader';
+import Dashboard from '@/components/dashboard/Dashboard';
 
 const Index = () => {
-  const metrics = [
-    { title: 'Blood Pressure', value: '123/78', status: 'positive', trend: 'down' as const, trendValue: '4%' },
-    { title: 'Heart Rate', value: '72 bpm', status: 'neutral' },
-    { title: 'Sleep Quality', value: '6.2h', status: 'warning', trend: 'down' as const, trendValue: '8%' },
-    { title: 'Physical Activity', value: '35 min', status: 'positive', trend: 'up' as const, trendValue: '10%' }
-  ];
+  const handleScheduleCall = () => {
+    window.location.href = '/schedule-followup';
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <DashboardHeader userName="Alex Smith" userEmail="alex@example.com" />
+      <DashboardHeader 
+        userName="Matteo Smith"
+        userEmail="matteo.smith@example.com"
+      />
       
-      <main className="p-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Welcome to Hana Health</h1>
-        
-        <HealthMetrics metrics={metrics} />
+      <main className="p-6 md:p-8 max-w-7xl mx-auto">
+        <Dashboard onScheduleCall={handleScheduleCall} />
       </main>
     </div>
   );

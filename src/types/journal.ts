@@ -5,8 +5,8 @@ export interface JournalEntryType {
   timestamp: string;
   title: string;
   content: string;
-  category: string;
   highlight?: string;
+  category: 'daily' | 'mood' | 'sleep' | 'achievement' | 'goals';
   mood?: {
     score: string;
     weekend: string;
@@ -24,15 +24,17 @@ export interface JournalEntryType {
   sleep?: {
     duration: string;
     quality: string;
-    notes: string;
+    notes?: string;
   };
   achievements?: Array<{
     title: string;
     description: string;
+    date?: string;
   }>;
   goals?: Array<{
     title: string;
     description: string;
     completed: boolean;
+    dueDate?: string;
   }>;
 }
