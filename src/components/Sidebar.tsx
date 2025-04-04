@@ -1,19 +1,37 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FileText, Home, Calendar, ChevronRight, ChevronLeft } from 'lucide-react';
+import { FileText, Home, Calendar, ChevronRight, ChevronLeft, Stethoscope } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ClinicalGuidelines } from '@/components/dashboard/intake';
 
 export const Sidebar = () => {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(true); // Default to collapsed
   const [isHovering, setIsHovering] = useState(false);
+  const [showClinicalGuidelines, setShowClinicalGuidelines] = useState(false);
   
   const navItems = [
     { icon: Home, label: 'Dashboard', path: '/' },
     { icon: Calendar, label: 'Schedule Followup', path: '/schedule-followup' },
     { icon: FileText, label: 'Health Journal', path: '/followup-report' },
+    { icon: Stethoscope, label: 'Clinical Guidelines', path: '#', 
+      action: () => setShowClinicalGuidelines(true) },
   ];
+
+  useEffect(() => {
+    // Listen for the custom event to open clinical guidelines
+    const handleOpenClinicalGuidelines = () => {
+      setIsCollapsed(false);
+      setShowClinicalGuidelines(true);
+    };
+    
+    document.addEventListener('open-clinical-guidelines', handleOpenClinicalGuidelines);
+    
+    return () => {
+      document.removeEventListener('open-clinical-guidelines', handleOpenClinicalGuidelines);
+    };
+  }, []);
 
   const handleMouseEnter = () => {
     if (isCollapsed) {
@@ -30,6 +48,10 @@ export const Sidebar = () => {
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed);
     setIsHovering(false);
+  };
+
+  const closeClinicGuidelines = () => {
+    setShowClinicalGuidelines(false);
   };
 
   const showExpanded = !isCollapsed || isHovering;
@@ -59,28 +81,51 @@ export const Sidebar = () => {
           />
         </div>
         
-        <nav className="flex-1 p-4 space-y-1 overflow-hidden">
-          {navItems.map((item) => {
-            const isActive = location.pathname === item.path;
-            const Icon = item.icon;
-            
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-md text-gray-700 transition-all duration-300",
-                  isActive ? "bg-hana-lightGreen text-hana-green font-medium" : "hover:bg-gray-50"
-                )}
+        {showClinicalGuidelines ? (
+          <div className="flex-1 overflow-auto">
+            <div className="p-4 flex items-center">
+              <button 
+                onClick={closeClinicGuidelines}
+                className="text-gray-500 hover:text-gray-700 mr-2"
               >
-                <Icon className={cn("w-5 h-5", isActive ? "text-hana-green" : "text-gray-500")} />
-                {showExpanded && (
-                  <span className="transition-opacity duration-300">{item.label}</span>
-                )}
-              </Link>
-            );
-          })}
-        </nav>
+                <ChevronLeft className="w-5 h-5" />
+              </button>
+              <span className="font-medium">Back to Navigation</span>
+            </div>
+            <ClinicalGuidelines />
+          </div>
+        ) : (
+          <nav className="flex-1 p-4 space-y-1 overflow-hidden">
+            {navItems.map((item) => {
+              const isActive = location.pathname === item.path;
+              const Icon = item.icon;
+              
+              const handleClick = (e) => {
+                if (item.action) {
+                  e.preventDefault();
+                  item.action();
+                }
+              };
+              
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-md text-gray-700 transition-all duration-300",
+                    isActive ? "bg-hana-lightGreen text-hana-green font-medium" : "hover:bg-gray-50"
+                  )}
+                  onClick={handleClick}
+                >
+                  <Icon className={cn("w-5 h-5", isActive ? "text-hana-green" : "text-gray-500")} />
+                  {showExpanded && (
+                    <span className="transition-opacity duration-300">{item.label}</span>
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
+        )}
         
         <div className="p-4 border-t border-gray-100 flex justify-between items-center">
           <div className={cn(
