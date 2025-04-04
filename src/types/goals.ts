@@ -1,24 +1,24 @@
+
 export interface Goal {
-  id: string;
+  id: number;
+  user_id: number;
   title: string;
-  duration: 'Short-Term' | 'Medium-Term' | 'Long-Term';
-  startDate: string;
-  endDate: string;
-  target: {
-    count: number;
-    unit: string;
-  };
+  description?: string;
+  duration_type: 'SHORT' | 'MEDIUM' | 'LONG';
+  start_date: string;
+  end_date: string;
+  target: number;
   progress: number;
+  origin: 'HANA' | 'PATIENT';
+  status: 'ACTIVE' | 'COMPLETED' | 'CANCELLED' | 'OVERDUE';
+  created_at?: string;
+  updated_at?: string;
+}
+
+// For compatibility with existing UI components
+export interface FormattedGoal extends Goal {
   category: string;
-  source: 'Hana Suggested' | 'Personal';
-  checkIns?: {
-    date: string;
-    note: string;
-  }[];
-  nudge?: string;
-  evidence?: string;
-  benefits?: string[];
   difficulty?: 'hard';
   term?: 'short term' | 'medium term' | 'long term';
-  description?: string;
+  source: 'Hana Suggested' | 'Personal';
 }
