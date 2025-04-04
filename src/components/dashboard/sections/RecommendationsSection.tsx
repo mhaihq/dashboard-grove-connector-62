@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Lightbulb } from 'lucide-react';
 import BehavioralInsightsTab from './tabs/BehavioralInsightsTab';
 
 interface RecommendationsSectionProps {
