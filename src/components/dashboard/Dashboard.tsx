@@ -21,7 +21,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
       title: "Physical Health",
       value: "Moderate",
       change: "+5%",
-      status: "mixed", // Changed from "improving" to "mixed"
+      status: "mixed",
       icon: <Activity className="w-5 h-5 text-blue-500" />,
       insights: [
         "Blood pressure: 128/82",
@@ -33,7 +33,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
       title: "Mental Wellbeing",
       value: "75/100",
       change: "+12%",
-      status: "positive", // Changed from "improving" to "positive"
+      status: "positive",
       icon: <Activity className="w-5 h-5 text-purple-500" />,
       insights: [
         "Stress levels decreasing",
@@ -45,7 +45,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
       title: "Social Connection",
       value: "Good",
       change: "Stable",
-      status: "mixed", // Changed from "stable" to "mixed"
+      status: "mixed",
       icon: <Activity className="w-5 h-5 text-green-500" />,
       insights: [
         "Regular calls with family",
@@ -57,7 +57,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
       title: "Medical Adherence",
       value: "92%",
       change: "+4%",
-      status: "positive", // Changed from "improving" to "positive"
+      status: "positive",
       icon: <Activity className="w-5 h-5 text-red-500" />,
       insights: [
         "Missed 2 medications this month",
@@ -135,7 +135,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      <DashboardHeader userName={userName} userEmail="sarah@example.com" />
+      <DashboardHeader 
+        userName={userName} 
+        userEmail="sarah@example.com" 
+      />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -145,7 +148,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
             {/* Health Metrics */}
             <HealthMetrics metrics={metrics} />
             
-            {/* Journey Roadmap - This is the new section we're adding */}
+            {/* Journey Roadmap */}
             <div className="mb-8">
               <JourneySoFarSection />
             </div>

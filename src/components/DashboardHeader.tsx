@@ -29,9 +29,9 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         </div>
         
         <div className="flex items-center gap-3">
-          <Avatar className="w-8 h-8">
+          <Avatar className="w-8 h-8 bg-hana-green">
             <AvatarImage 
-              src="https://media.licdn.com/dms/image/v2/D4E03AQEF64y0nluvpw/profile-displayphoto-shrink_800_800/B4EZSgI1mgHcAc-/0/1737853459711?e=1747872000&v=beta&t=3713WkmjpsNYWB0H9Qxg7HrdB3RTyK5bZuLfj-EccRo" 
+              src={userImage} 
               alt={userName} 
             />
             <AvatarFallback className="bg-hana-green text-white">
