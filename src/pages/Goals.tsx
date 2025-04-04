@@ -5,8 +5,8 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Trophy, Check, Calendar, Plus } from 'lucide-react';
-import { formattedGoals } from '@/data/goals/goalsData';
+import { Trophy, Check, Calendar, Plus, X, Sparkles } from 'lucide-react';
+import { formattedGoals, suggestedGoals } from '@/data/goals/goalsData';
 import { goalCategories } from '@/data/goals/goalsData';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from '@/components/ui/sheet';
@@ -20,6 +20,7 @@ const Goals = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All Goals");
   const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
   const isMobile = useIsMobile();
+  const [suggestedGoalsList, setSuggestedGoalsList] = useState(suggestedGoals);
   
   // New goal state
   const [newGoal, setNewGoal] = useState({
@@ -96,6 +97,25 @@ const Goals = () => {
     toast.success("Goal created successfully!");
   };
   
+  // Handle adopting a suggested goal
+  const handleAdoptSuggestedGoal = (goal: Partial<FormattedGoal>) => {
+    // In a real app, we would save this to the backend
+    toast.success(`Added "${goal.title}" to your goals!`);
+    
+    // Remove from suggested goals
+    setSuggestedGoalsList(current => 
+      current.filter(g => g.id !== goal.id)
+    );
+  };
+  
+  // Handle dismissing a suggested goal
+  const handleDismissSuggestedGoal = (goalId: number) => {
+    setSuggestedGoalsList(current => 
+      current.filter(g => g.id !== goalId)
+    );
+    toast("Suggestion dismissed");
+  };
+  
   const GoalDialog = isMobile ? Sheet : Dialog;
   const GoalDialogContent = isMobile ? SheetContent : DialogContent;
   const GoalDialogHeader = isMobile ? SheetHeader : DialogHeader;
@@ -130,83 +150,136 @@ const Goals = () => {
         ))}
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {filteredGoals.map(goal => {
-          const progressPercentage = Math.round((goal.progress / goal.target) * 100);
-          const currentStreak = goal.current_streak || 0;
+      {/* Suggested Goals Section */}
+      {suggestedGoalsList.length > 0 && (
+        <div className="mb-8">
+          <div className="flex items-center mb-4">
+            <Sparkles className="w-5 h-5 text-amber-500 mr-2" />
+            <h2 className="text-xl font-semibold">Suggested by Hana</h2>
+          </div>
           
-          return (
-            <Card key={goal.id} className="overflow-hidden hover:shadow-md transition-shadow">
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-lg font-semibold line-clamp-2 leading-tight">
-                    {goal.title}
-                  </CardTitle>
-                  <Badge 
-                    variant={goal.origin === 'HANA' ? 'secondary' : 'outline'}
-                    className={cn(
-                      goal.origin === 'HANA' ? 'bg-blue-100 text-blue-800 hover:bg-blue-200' : 'border-gray-200'
-                    )}
-                  >
-                    {goal.source}
-                  </Badge>
-                </div>
-                <div className="flex gap-2 mt-2">
-                  <Badge variant="outline" className={cn(getStatusColor(goal.status))}>
-                    {goal.status}
-                  </Badge>
-                  <Badge variant="outline" className="bg-purple-100 text-purple-800">
-                    {getDurationLabel(goal.duration_type)}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent>
-                {/* Simplified Streak Information */}
-                {currentStreak > 0 && (
-                  <div className="mb-4 flex items-center gap-2">
-                    <Trophy className="w-4 h-4 text-amber-500" />
-                    <span className="text-sm font-medium text-amber-800">{currentStreak} day streak</span>
-                  </div>
-                )}
-
-                {/* Overall Progress */}
-                <div className="pt-2">
-                  <div className="flex justify-between items-center mb-1">
-                    <div className="text-sm text-gray-600">
-                      {goal.progress} / {goal.target}
-                    </div>
-                    <div 
-                      className={cn(
-                        "text-sm font-medium",
-                        progressPercentage < 25 ? "text-red-600" :
-                        progressPercentage < 75 ? "text-amber-600" : "text-green-600"
-                      )}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {suggestedGoalsList.map(goal => (
+              <Card key={goal.id} className="overflow-hidden border-amber-200 bg-amber-50/40 hover:shadow-md transition-shadow">
+                <CardContent className="p-4">
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-lg font-semibold text-amber-900">{goal.title}</h3>
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="h-7 w-7 text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                      onClick={() => handleDismissSuggestedGoal(goal.id)}
                     >
-                      {progressPercentage}%
-                    </div>
-                  </div>
-                  <Progress 
-                    value={progressPercentage} 
-                    className="h-2"
-                  />
-                </div>
-                
-                <div className="mt-4">
-                  <div className="text-sm text-gray-600 mb-1 flex items-center">
-                    <Calendar className="w-3 h-3 mr-1" />
-                    {new Date(goal.start_date).toLocaleDateString()} - {new Date(goal.end_date).toLocaleDateString()}
+                      <X className="h-4 w-4" />
+                      <span className="sr-only">Dismiss</span>
+                    </Button>
                   </div>
                   
-                  {goal.description && (
-                    <p className="text-sm text-gray-700 mt-2 line-clamp-2">
-                      {goal.description}
-                    </p>
+                  <p className="text-sm text-amber-800 mt-1 mb-3">{goal.description}</p>
+                  
+                  <div className="flex items-center gap-2 mt-2">
+                    <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200">
+                      {getDurationLabel(goal.duration_type)}
+                    </Badge>
+                    <span className="text-xs text-amber-700">Target: {goal.target} actions</span>
+                  </div>
+                  
+                  <Button 
+                    variant="outline"
+                    className="w-full mt-4 border-amber-300 text-amber-800 hover:bg-amber-100 hover:text-amber-900"
+                    onClick={() => handleAdoptSuggestedGoal(goal)}
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add to My Goals
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {/* Current Goals Grid */}
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold mb-4">Currently Tracking</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {filteredGoals.map(goal => {
+            const progressPercentage = Math.round((goal.progress / goal.target) * 100);
+            const currentStreak = goal.current_streak || 0;
+            
+            return (
+              <Card key={goal.id} className="overflow-hidden hover:shadow-md transition-shadow">
+                <CardHeader className="pb-2">
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="text-lg font-semibold line-clamp-2 leading-tight">
+                      {goal.title}
+                    </CardTitle>
+                    <Badge 
+                      variant={goal.origin === 'HANA' ? 'secondary' : 'outline'}
+                      className={cn(
+                        goal.origin === 'HANA' ? 'bg-blue-100 text-blue-800 hover:bg-blue-200' : 'border-gray-200'
+                      )}
+                    >
+                      {goal.source}
+                    </Badge>
+                  </div>
+                  <div className="flex gap-2 mt-2">
+                    <Badge variant="outline" className={cn(getStatusColor(goal.status))}>
+                      {goal.status}
+                    </Badge>
+                    <Badge variant="outline" className="bg-purple-100 text-purple-800">
+                      {getDurationLabel(goal.duration_type)}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {/* Simplified Streak Information */}
+                  {currentStreak > 0 && (
+                    <div className="mb-4 flex items-center gap-2">
+                      <Trophy className="w-4 h-4 text-amber-500" />
+                      <span className="text-sm font-medium text-amber-800">{currentStreak} day streak</span>
+                    </div>
                   )}
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+
+                  {/* Overall Progress */}
+                  <div className="pt-2">
+                    <div className="flex justify-between items-center mb-1">
+                      <div className="text-sm text-gray-600">
+                        {goal.progress} / {goal.target}
+                      </div>
+                      <div 
+                        className={cn(
+                          "text-sm font-medium",
+                          progressPercentage < 25 ? "text-red-600" :
+                          progressPercentage < 75 ? "text-amber-600" : "text-green-600"
+                        )}
+                      >
+                        {progressPercentage}%
+                      </div>
+                    </div>
+                    <Progress 
+                      value={progressPercentage} 
+                      className="h-2"
+                    />
+                  </div>
+                  
+                  <div className="mt-4">
+                    <div className="text-sm text-gray-600 mb-1 flex items-center">
+                      <Calendar className="w-3 h-3 mr-1" />
+                      {new Date(goal.start_date).toLocaleDateString()} - {new Date(goal.end_date).toLocaleDateString()}
+                    </div>
+                    
+                    {goal.description && (
+                      <p className="text-sm text-gray-700 mt-2 line-clamp-2">
+                        {goal.description}
+                      </p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
       </div>
       
       {filteredGoals.length === 0 && (

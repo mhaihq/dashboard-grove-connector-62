@@ -1,3 +1,4 @@
+
 import { Goal } from "@/types/goals";
 
 export const goals: Goal[] = [
@@ -130,23 +131,34 @@ export const goalCategories = [
   "Physical Health"
 ];
 
-// These are formatted for UI display purposes
+// These are formatted for UI display purposes with expanded properties
 export const suggestedGoals: Partial<Goal>[] = [
   {
     id: 101,
     title: "Morning Mindfulness Routine",
-    description: "Start each day with a 10-minute mindfulness practice",
+    description: "Start each day with a 10-minute mindfulness practice to reduce stress and improve focus",
     duration_type: "SHORT",
     target: 10,
-    origin: "HANA"
+    origin: "HANA",
+    category: "Coping Skills"
   },
   {
     id: 102,
     title: "Weekly Social Connection",
-    description: "Schedule at least one meaningful social interaction per week",
+    description: "Schedule at least one meaningful social interaction per week to strengthen your support network",
     duration_type: "MEDIUM",
     target: 4,
-    origin: "HANA"
+    origin: "HANA",
+    category: "Social"
+  },
+  {
+    id: 103,
+    title: "Daily Gratitude Journal",
+    description: "Write down three things you're grateful for each day to foster positive thinking",
+    duration_type: "SHORT",
+    target: 7,
+    origin: "HANA",
+    category: "Coping Skills"
   }
 ];
 

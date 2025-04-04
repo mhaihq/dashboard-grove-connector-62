@@ -17,6 +17,9 @@ export interface Goal {
   longest_streak?: number;
   last_check_in_date?: string;
   
+  // Adding category field to support suggested goals
+  category?: string;
+  
   created_at?: string;
   updated_at?: string;
 }
