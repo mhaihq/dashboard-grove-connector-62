@@ -147,5 +147,10 @@ export const formattedGoals = goals.map(goal => ({
   term: goal.duration_type === "SHORT" ? "short term" as const : 
         goal.duration_type === "MEDIUM" ? "medium term" as const : 
         "long term" as const,
-  source: goal.origin === "HANA" ? "Hana Suggested" : "Personal" as const
+  source: goal.origin === "HANA" ? "Hana Suggested" : "Personal" as const,
+  // Add streak data
+  currentWeeklyStreak: goal.id === 2 ? 6 : goal.id === 1 ? 3 : goal.id === 3 ? 2 : 0,
+  longestStreak: goal.id === 2 ? 7 : goal.id === 1 ? 5 : goal.id === 3 ? 2 : 0,
+  thisWeekProgress: goal.id === 2 ? 5 : goal.id === 1 ? 3 : goal.id === 3 ? 1 : 0,
+  weeklyTarget: goal.id === 2 ? 7 : goal.id === 1 ? 4 : goal.id === 3 ? 2 : 1
 }));

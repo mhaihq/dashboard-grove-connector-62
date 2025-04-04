@@ -5,6 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { Trophy, Check, Calendar } from 'lucide-react';
 
 // Updated sample data to match the new schema
 const sampleGoals = [
@@ -26,7 +27,12 @@ const sampleGoals = [
     category: "Lifestyle",
     source: "Hana Suggested",
     difficulty: "hard" as const,
-    term: "short term" as const
+    term: "short term" as const,
+    // Added streak information
+    currentWeeklyStreak: 3,
+    longestStreak: 5,
+    thisWeekProgress: 3,
+    weeklyTarget: 4
   },
   {
     id: 2,
@@ -46,7 +52,12 @@ const sampleGoals = [
     category: "Lifestyle",
     source: "Personal",
     difficulty: "hard" as const,
-    term: "medium term" as const
+    term: "medium term" as const,
+    // Added streak information
+    currentWeeklyStreak: 6,
+    longestStreak: 7,
+    thisWeekProgress: 5,
+    weeklyTarget: 7
   },
   {
     id: 3,
@@ -66,7 +77,12 @@ const sampleGoals = [
     category: "Physical Health",
     source: "Personal",
     difficulty: "hard" as const,
-    term: "short term" as const
+    term: "short term" as const,
+    // Added streak information
+    currentWeeklyStreak: 2,
+    longestStreak: 2,
+    thisWeekProgress: 1,
+    weeklyTarget: 2
   },
   {
     id: 4,
@@ -86,7 +102,12 @@ const sampleGoals = [
     category: "Social",
     source: "Hana Suggested",
     difficulty: "hard" as const,
-    term: "medium term" as const
+    term: "medium term" as const,
+    // Added streak information
+    currentWeeklyStreak: 0,
+    longestStreak: 0,
+    thisWeekProgress: 0,
+    weeklyTarget: 1
   }
 ];
 
@@ -154,6 +175,7 @@ const Goals = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {filteredGoals.map(goal => {
           const progressPercentage = Math.round((goal.progress / goal.target) * 100);
+          const weeklyProgressPercentage = Math.round((goal.thisWeekProgress / goal.weeklyTarget) * 100) || 0;
           
           return (
             <Card key={goal.id} className="overflow-hidden">
@@ -181,10 +203,50 @@ const Goals = () => {
                 </div>
               </CardHeader>
               <CardContent>
+                {/* Weekly Streak Information */}
+                <div className="mb-4 border rounded-lg p-3 bg-amber-50">
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="flex items-center">
+                      <Trophy className="w-4 h-4 text-amber-500 mr-1" />
+                      <span className="text-sm font-medium text-amber-800">Weekly Progress</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Badge 
+                        variant="outline" 
+                        className="bg-amber-100 text-amber-800 border-amber-200"
+                      >
+                        {goal.currentWeeklyStreak} day streak
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-between items-center mt-2 mb-1">
+                    <div className="text-xs text-amber-800">
+                      {goal.thisWeekProgress} / {goal.weeklyTarget} this week
+                    </div>
+                    <div className="text-xs font-medium text-amber-800">
+                      {weeklyProgressPercentage}%
+                    </div>
+                  </div>
+                  <Progress 
+                    value={weeklyProgressPercentage} 
+                    className="h-1.5 bg-amber-200"
+                  />
+                  
+                  <div className="flex justify-between items-center mt-2 text-xs text-amber-800">
+                    <div>Longest streak: {goal.longestStreak} days</div>
+                    <div className="flex items-center">
+                      <Calendar className="w-3 h-3 mr-1 text-amber-500" />
+                      <span>Weekly target: {goal.weeklyTarget}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Overall Progress */}
                 <div className="pt-2">
                   <div className="flex justify-between items-center mb-1">
                     <div className="text-sm text-gray-600">
-                      {goal.progress} / {goal.target}
+                      Overall: {goal.progress} / {goal.target}
                     </div>
                     <div 
                       className={cn(

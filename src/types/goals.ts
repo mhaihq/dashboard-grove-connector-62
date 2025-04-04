@@ -21,4 +21,9 @@ export interface FormattedGoal extends Goal {
   difficulty?: 'hard';
   term?: 'short term' | 'medium term' | 'long term';
   source: 'Hana Suggested' | 'Personal';
+  // Added streak information
+  currentWeeklyStreak?: number;
+  longestStreak?: number;
+  thisWeekProgress?: number;
+  weeklyTarget?: number;
 }

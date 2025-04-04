@@ -16,6 +16,11 @@ interface Goal {
   term: string;
   start_date: string;
   end_date: string;
+  // Added fields for streak information
+  currentWeeklyStreak?: number;
+  longestStreak?: number;
+  thisWeekProgress?: number;
+  weeklyTarget?: number;
 }
 
 interface GoalStreakSectionProps {
@@ -36,7 +41,13 @@ const GoalStreakSection: React.FC<GoalStreakSectionProps> = ({ goals }) => {
   // Calculate overall streak stats
   const totalGoalsCompleted = goals.filter(g => g.progress >= g.target).length;
   const goalsInProgress = goals.filter(g => g.progress > 0 && g.progress < g.target).length;
-  const streakDays = 5; // This would be calculated based on user's actual streak
+  
+  // Find goal with longest streak
+  const longestStreakGoal = [...goals].sort((a, b) => 
+    (b.longestStreak || 0) - (a.longestStreak || 0)
+  )[0];
+  const streakDays = longestStreakGoal?.longestStreak || 0;
+  const streakGoalName = longestStreakGoal?.title || "No active streak";
   
   return (
     <Card className="shadow-sm overflow-hidden border-gray-200 bg-white rounded-xl">
@@ -54,10 +65,42 @@ const GoalStreakSection: React.FC<GoalStreakSectionProps> = ({ goals }) => {
       </CardHeader>
       
       <CardContent className="p-4">
+        {/* Stats summary at the top */}
+        <div className="mb-4 grid grid-cols-3 gap-2 text-center">
+          <div className="bg-green-50 rounded-lg p-2">
+            <p className="text-xl text-green-700 font-bold">{totalGoalsCompleted}</p>
+            <p className="text-xs text-gray-700">Completed</p>
+          </div>
+          <div className="bg-blue-50 rounded-lg p-2">
+            <p className="text-xl text-blue-700 font-bold">{goalsInProgress}</p>
+            <p className="text-xs text-gray-700">In Progress</p>
+          </div>
+          <div className="bg-amber-50 rounded-lg p-2">
+            <p className="text-xl text-amber-700 font-bold">{streakDays}</p>
+            <p className="text-xs text-gray-700">
+              <span className="inline-block truncate max-w-full">
+                {streakDays > 0 ? "Longest Streak" : "No Streak"}
+              </span>
+            </p>
+          </div>
+        </div>
+        
+        {streakDays > 0 && (
+          <div className="mb-4 p-3 border border-amber-200 bg-amber-50 rounded-lg">
+            <div className="flex items-center gap-2">
+              <Trophy className="w-4 h-4 text-amber-500" />
+              <p className="text-sm font-medium text-amber-800">
+                Longest streak: <span className="font-semibold">{streakDays} days</span> on "{streakGoalName}"
+              </p>
+            </div>
+          </div>
+        )}
+
         <div className="space-y-4">
           {topGoals.map((goal) => {
             const progressPercent = Math.round((goal.progress / goal.target) * 100);
             const daysLeft = Math.ceil((new Date(goal.end_date).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
+            const currentStreak = goal.currentWeeklyStreak || 0;
             
             // Determine color based on progress
             const progressColor = progressPercent >= 75 ? 'bg-green-500' : 
@@ -127,11 +170,15 @@ const GoalStreakSection: React.FC<GoalStreakSectionProps> = ({ goals }) => {
                 </div>
                 
                 <div className="mt-3 flex justify-between items-center">
-                  <div className="bg-blue-50 rounded-full px-2 py-0.5 text-xs text-blue-700">
-                    {goal.term}
-                  </div>
+                  {currentStreak > 0 && (
+                    <div className="bg-amber-50 rounded-full px-2 py-0.5 text-xs text-amber-700 flex items-center">
+                      <Trophy className="w-3 h-3 mr-1 text-amber-500" />
+                      {currentStreak} day streak
+                    </div>
+                  )}
+                  
                   <div className={cn(
-                    "text-xs font-medium rounded-full px-2 py-0.5",
+                    "text-xs font-medium rounded-full px-2 py-0.5 ml-auto",
                     goal.difficulty === "easy" ? "bg-green-50 text-green-700" :
                     goal.difficulty === "moderate" ? "bg-amber-50 text-amber-700" :
                     "bg-red-50 text-red-700"
@@ -142,21 +189,6 @@ const GoalStreakSection: React.FC<GoalStreakSectionProps> = ({ goals }) => {
               </div>
             );
           })}
-          
-          <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-            <div className="bg-green-50 rounded-lg p-2">
-              <p className="text-xl text-green-700 font-bold">{totalGoalsCompleted}</p>
-              <p className="text-xs text-gray-700">Completed</p>
-            </div>
-            <div className="bg-blue-50 rounded-lg p-2">
-              <p className="text-xl text-blue-700 font-bold">{goalsInProgress}</p>
-              <p className="text-xs text-gray-700">In Progress</p>
-            </div>
-            <div className="bg-purple-50 rounded-lg p-2">
-              <p className="text-xl text-purple-700 font-bold">{streakDays}</p>
-              <p className="text-xs text-gray-700">Day Streak</p>
-            </div>
-          </div>
           
           <div className="pt-2 border-t border-gray-100 text-center">
             <a href="/goals" className="text-sm text-blue-600 hover:text-blue-800 font-medium inline-flex items-center">
