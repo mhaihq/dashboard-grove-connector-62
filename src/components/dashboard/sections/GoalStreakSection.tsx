@@ -17,6 +17,8 @@ interface Goal {
   start_date: string;
   end_date: string;
   // Added fields for streak information
+  current_streak?: number;
+  longest_streak?: number;
   currentWeeklyStreak?: number;
   longestStreak?: number;
   thisWeekProgress?: number;
@@ -44,9 +46,9 @@ const GoalStreakSection: React.FC<GoalStreakSectionProps> = ({ goals }) => {
   
   // Find goal with longest streak
   const longestStreakGoal = [...goals].sort((a, b) => 
-    (b.longestStreak || 0) - (a.longestStreak || 0)
+    (b.longest_streak || b.longestStreak || 0) - (a.longest_streak || a.longestStreak || 0)
   )[0];
-  const streakDays = longestStreakGoal?.longestStreak || 0;
+  const streakDays = longestStreakGoal?.longest_streak || longestStreakGoal?.longestStreak || 0;
   const streakGoalName = longestStreakGoal?.title || "No active streak";
   
   return (
@@ -100,7 +102,7 @@ const GoalStreakSection: React.FC<GoalStreakSectionProps> = ({ goals }) => {
           {topGoals.map((goal) => {
             const progressPercent = Math.round((goal.progress / goal.target) * 100);
             const daysLeft = Math.ceil((new Date(goal.end_date).getTime() - new Date().getTime()) / (1000 * 3600 * 24));
-            const currentStreak = goal.currentWeeklyStreak || 0;
+            const currentStreak = goal.current_streak || goal.currentWeeklyStreak || 0;
             
             // Determine color based on progress
             const progressColor = progressPercent >= 75 ? 'bg-green-500' : 
