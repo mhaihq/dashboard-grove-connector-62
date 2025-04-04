@@ -35,6 +35,12 @@ const Goals = () => {
     return Math.round((goal.progress / goal.target.count) * 100);
   };
 
+  const getProgressColor = (progressPercent: number) => {
+    if (progressPercent > 66) return 'bg-green-100 text-green-800';
+    if (progressPercent > 33) return 'bg-amber-100 text-amber-800';
+    return 'bg-red-100 text-red-800';
+  };
+
   return (
     <div className="container px-4 py-8 max-w-6xl mx-auto">
       <div className="mb-8">
@@ -79,7 +85,13 @@ const Goals = () => {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="text-lg font-semibold">{goal.title}</h3>
-                      <Badge variant={goal.source === "Hana Suggested" ? "outline" : "secondary"}>
+                      <Badge 
+                        variant={goal.source === "Hana Suggested" ? "outline" : "secondary"}
+                        className={goal.source === "Hana Suggested" 
+                          ? "bg-blue-50 text-blue-800" 
+                          : "bg-green-50 text-green-800"
+                        }
+                      >
                         {goal.source}
                       </Badge>
                     </div>
@@ -116,15 +128,25 @@ const Goals = () => {
                       {goal.progress} / {goal.target.count} {goal.target.unit.split('/')[0]}
                     </span>
                   </div>
-                  <Progress 
-                    value={progressPercent} 
-                    className={cn(
-                      "h-2",
-                      progressPercent > 66 ? "bg-secondary text-green-500" :
-                      progressPercent > 33 ? "bg-secondary text-amber-500" :
-                      "bg-secondary text-red-500"
-                    )}
-                  />
+                  <div className="flex items-center gap-2">
+                    <Progress 
+                      value={progressPercent} 
+                      className={cn(
+                        "h-2 flex-1",
+                        progressPercent > 66 ? "bg-secondary text-green-500" :
+                        progressPercent > 33 ? "bg-secondary text-amber-500" :
+                        "bg-secondary text-red-500"
+                      )}
+                    />
+                    <span 
+                      className={cn(
+                        "text-xs px-2 py-0.5 rounded-full",
+                        getProgressColor(progressPercent)
+                      )}
+                    >
+                      {progressPercent}%
+                    </span>
+                  </div>
                 </div>
 
                 {isExpanded && (
@@ -187,12 +209,20 @@ const Goals = () => {
         <h2 className="text-2xl font-semibold mb-6">Suggested Goals</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {suggestedGoals.map((goal, index) => (
-            <Card key={index} className="border border-dashed border-gray-300 hover:border-gray-400 transition-all">
+            <Card 
+              key={index} 
+              className="border border-dashed border-gray-300 hover:border-gray-400 transition-all"
+            >
               <CardContent className="p-5">
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="text-lg font-medium mb-1">{goal.title}</h3>
-                    <Badge variant="outline" className="mb-3">{goal.category}</Badge>
+                    <Badge 
+                      variant="outline" 
+                      className="mb-3 bg-purple-50 text-purple-800"
+                    >
+                      {goal.category}
+                    </Badge>
                     
                     <p className="text-gray-600 mb-4">{goal.description}</p>
                     
@@ -212,19 +242,24 @@ const Goals = () => {
                     
                     <div className="flex items-center gap-6 mt-4 text-sm text-gray-500">
                       {goal.difficulty && (
-                        <div className="flex items-center gap-1">
-                          <span className="text-xs uppercase">
-                            {goal.difficulty} difficulty
-                          </span>
-                        </div>
+                        <span 
+                          className={cn(
+                            "px-2 py-0.5 rounded-full text-xs uppercase",
+                            goal.difficulty === 'easy' ? "bg-green-100 text-green-800" :
+                            goal.difficulty === 'medium' ? "bg-amber-100 text-amber-800" :
+                            "bg-red-100 text-red-800"
+                          )}
+                        >
+                          {goal.difficulty} difficulty
+                        </span>
                       )}
                       
                       {goal.term && (
-                        <div className="flex items-center gap-1">
-                          <span className="text-xs uppercase">
-                            {goal.term}
-                          </span>
-                        </div>
+                        <span 
+                          className="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs uppercase"
+                        >
+                          {goal.term}
+                        </span>
                       )}
                     </div>
                   </div>
