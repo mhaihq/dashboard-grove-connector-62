@@ -8,7 +8,11 @@ import JourneySoFarSection from './sections/JourneySoFarSection';
 import { MetricProps } from '@/components/metrics/MetricCard';
 import { Check, Clock, CalendarClock, Bell, Activity } from 'lucide-react';
 
-export const Dashboard: React.FC = () => {
+interface DashboardProps {
+  onScheduleCall?: () => void;
+}
+
+export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
   const userName = "Sarah";
   
   // Demo metrics data
@@ -17,7 +21,7 @@ export const Dashboard: React.FC = () => {
       title: "Physical Health",
       value: "Moderate",
       change: "+5%",
-      status: "improving",
+      status: "mixed", // Changed from "improving" to "mixed"
       icon: <Activity className="w-5 h-5 text-blue-500" />,
       insights: [
         "Blood pressure: 128/82",
@@ -29,7 +33,7 @@ export const Dashboard: React.FC = () => {
       title: "Mental Wellbeing",
       value: "75/100",
       change: "+12%",
-      status: "improving",
+      status: "positive", // Changed from "improving" to "positive"
       icon: <Activity className="w-5 h-5 text-purple-500" />,
       insights: [
         "Stress levels decreasing",
@@ -41,7 +45,7 @@ export const Dashboard: React.FC = () => {
       title: "Social Connection",
       value: "Good",
       change: "Stable",
-      status: "stable",
+      status: "mixed", // Changed from "stable" to "mixed"
       icon: <Activity className="w-5 h-5 text-green-500" />,
       insights: [
         "Regular calls with family",
@@ -53,7 +57,7 @@ export const Dashboard: React.FC = () => {
       title: "Medical Adherence",
       value: "92%",
       change: "+4%",
-      status: "improving",
+      status: "positive", // Changed from "improving" to "positive"
       icon: <Activity className="w-5 h-5 text-red-500" />,
       insights: [
         "Missed 2 medications this month",
