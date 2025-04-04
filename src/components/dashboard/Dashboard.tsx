@@ -4,11 +4,13 @@ import DashboardHeader from '@/components/DashboardHeader';
 import ProgressSection from '@/components/ProgressSection';
 import UpcomingActions from '@/components/UpcomingActions';
 import JourneySoFarSection from './sections/JourneySoFarSection';
-import { Check, Clock, CalendarClock, Bell } from 'lucide-react';
+import { Check, Clock, CalendarClock, Bell, Award, Target } from 'lucide-react';
 import HealthPulseSection from './sections/HealthPulseSection';
 import RecommendationsSection from './sections/RecommendationsSection';
 import { healthPulseData } from '@/data/health/healthPulseData';
 import { journalEntries } from '@/data/health/journalEntries';
+import GoalStreakSection from './sections/GoalStreakSection';
+import { formattedGoals } from '@/data/goals/goalsData';
 
 interface DashboardProps {
   onScheduleCall?: () => void;
@@ -134,6 +136,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
           </div>
           
           <div className="space-y-6">
+            {/* Goal Streak Section */}
+            <GoalStreakSection goals={formattedGoals} />
+            
             <div className="bg-white rounded-xl border border-gray-100 p-4 shadow-sm">
               <div className="flex items-center gap-2 mb-4">
                 <Bell className="w-5 h-5 text-amber-500" />
