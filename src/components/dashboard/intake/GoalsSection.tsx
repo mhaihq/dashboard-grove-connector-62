@@ -2,6 +2,7 @@
 import React from 'react';
 import { FileCheck, Calendar, Award } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { StreakBanner } from '@/components/ui/streak-banner'; 
 
 interface GoalsSectionProps {
   goals: string[];
@@ -15,8 +16,8 @@ export const GoalsSection: React.FC<GoalsSectionProps> = ({ goals }) => {
     <div className="border border-gray-100 rounded-lg p-4 bg-white shadow-sm">
       <div className="flex items-center justify-between mb-3">
         <h4 className="font-medium text-gray-900 flex items-center gap-2">
-          <div className="bg-green-50 p-1.5 rounded-full">
-            <FileCheck className="h-4 w-4 text-green-500" />
+          <div className="bg-hana-lightGreen p-1.5 rounded-full">
+            <FileCheck className="h-4 w-4 text-hana-green" />
           </div>
           This Week's Goals
         </h4>
@@ -28,9 +29,12 @@ export const GoalsSection: React.FC<GoalsSectionProps> = ({ goals }) => {
       
       <div className="space-y-4">
         {goals.map((goal, index) => (
-          <div key={index} className="bg-white border border-gray-200 rounded-xl p-3 shadow-sm">
+          <div key={index} className="bg-white border border-gray-200 rounded-xl p-3 shadow-sm relative">
+            {index < 2 && (
+              <StreakBanner days={index === 0 ? 4 : 2} />
+            )}
             <div className="flex items-start">
-              <div className="w-7 h-7 rounded-full bg-green-100 text-green-800 flex items-center justify-center text-xs mr-3 font-medium">
+              <div className="w-7 h-7 rounded-full bg-hana-lightGreen text-hana-green flex items-center justify-center text-xs mr-3 font-medium">
                 {index + 1}
               </div>
               <div>
@@ -44,7 +48,7 @@ export const GoalsSection: React.FC<GoalsSectionProps> = ({ goals }) => {
                           <div 
                             key={i} 
                             className={`w-5 h-5 rounded-full flex items-center justify-center mr-1 ${
-                              i < 3 ? "bg-green-400 text-white" : "bg-gray-200"
+                              i < 3 ? "bg-hana-green text-white" : "bg-gray-200"
                             }`}
                           >
                             {i < 3 && "✓"}

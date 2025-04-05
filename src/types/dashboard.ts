@@ -1,4 +1,3 @@
-
 import { ReactNode } from 'react';
 
 export interface HealthIndicator {
@@ -139,18 +138,16 @@ export interface MilestonesData {
   }[];
 }
 
-// New interface for habit streaks
 export interface HabitStreak {
   habit: string;
   icon: string;
   days: number;
   target: number;
-  trend: string;
   status: 'improved' | 'declined' | 'stable';
-  supportedGoal?: string;
+  trend: string;
+  supportedGoal: string;
 }
 
-// New interface for AI system suggestion
 export interface SystemSuggestion {
   suggestion: string;
   basedOn: string;
