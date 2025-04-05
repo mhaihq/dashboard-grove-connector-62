@@ -11,7 +11,7 @@ export interface MetricProps {
   title: string;
   status: StatusType;
   value?: string;
-  change?: string;
+  change?: string | { value: string | number; timeframe: string };
   icon?: React.ReactNode;
   description?: string;
   insights?: string[];
@@ -28,6 +28,20 @@ export const MetricCard: React.FC<MetricProps> = ({
 }) => {
   const [expanded, setExpanded] = React.useState(false);
   
+  // Helper to display change value properly based on type
+  const renderChangeValue = () => {
+    if (typeof change === 'string') {
+      return <div className="text-sm font-medium text-gray-500">{change}</div>;
+    } else if (change && typeof change === 'object') {
+      return (
+        <div className="text-sm font-medium text-gray-500">
+          {change.value} ({change.timeframe})
+        </div>
+      );
+    }
+    return null;
+  };
+  
   return (
     <div className="bg-white rounded-lg border border-gray-100 p-3 hover-scale text-left">
       <div className="flex items-center justify-between mb-2">
@@ -42,7 +56,7 @@ export const MetricCard: React.FC<MetricProps> = ({
       {(value || change) && (
         <div className="flex items-baseline justify-between mb-2">
           {value && <div className="text-2xl font-semibold">{value}</div>}
-          {change && <div className="text-sm font-medium text-gray-500">{change}</div>}
+          {change && renderChangeValue()}
         </div>
       )}
       
@@ -89,4 +103,3 @@ export const MetricCard: React.FC<MetricProps> = ({
 };
 
 export default MetricCard;
-
