@@ -78,8 +78,10 @@ export const HealthRecommendations: React.FC<HealthRecommendationsProps> = ({
   const behavioralInsights = createBehavioralInsights(recommendations);
 
   const handleRecommendationAction = (recommendation: ClinicalRecommendation) => {
-    // For now we'll just trigger the call action for any recommendation
-    onScheduleCall();
+    if (recommendation.actionType === "call") {
+      onScheduleCall();
+    }
+    // Handle other action types as needed
   };
 
   const handleMakeGoal = (insight: any) => {
@@ -158,29 +160,22 @@ export const HealthRecommendations: React.FC<HealthRecommendationsProps> = ({
                 />
               ))}
               
-              {/* For each recommendation, we'll create a "program-like" object that ClinicalRecommendationCard can use */}
-              {recommendations.slice(0, 2).map((recommendation, index) => {
-                // Add defaulted icon to satisfy the type requirement
-                const adaptedProgram = {
-                  ...recommendation,
-                  name: recommendation.title,
-                  description: recommendation.description || "",
-                  benefits: recommendation.steps || [],
-                  coverage: recommendation.whyItMatters || "Talk to your doctor about coverage options.",
-                  isEligible: true,
-                  originalName: recommendation.title,
-                  eligibility: "Talk to your healthcare provider to determine eligibility.",
-                  icon: "clipboard" // Default icon if none is provided
-                } as MedicareProgram;
-                
-                return (
-                  <ClinicalRecommendationCard
-                    key={`rec-${index}`}
-                    program={adaptedProgram}
-                    onAction={() => handleRecommendationAction(recommendation)}
-                  />
-                );
-              })}
+              {recommendations.slice(0, 2).map((recommendation, index) => (
+                <ClinicalRecommendationCard
+                  key={`rec-${index}`}
+                  program={{
+                    ...recommendation,
+                    name: recommendation.title,
+                    description: recommendation.description,
+                    benefits: recommendation.steps,
+                    coverage: recommendation.whyItMatters,
+                    isEligible: true,
+                    originalName: recommendation.title,
+                    eligibility: "Talk to your healthcare provider to determine eligibility."
+                  }}
+                  onAction={() => handleRecommendationAction(recommendation)}
+                />
+              ))}
             </div>
           </div>
         )}
