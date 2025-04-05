@@ -23,10 +23,9 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = ({ status }) => {
 
   return (
     <div className={cn(
-      "px-2 py-1 rounded-full text-xs font-medium",
-      status === 'positive' ? "bg-positive-light text-positive" : 
-      status === 'mixed' ? "bg-mixed-light text-mixed" : 
-      "bg-concerning-light text-concerning"
+      status === 'positive' ? "status-positive" : 
+      status === 'mixed' ? "status-mixed" : 
+      "status-concerning"
     )}>
       {getStatusLabel(status)}
     </div>
