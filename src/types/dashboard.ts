@@ -1,11 +1,10 @@
-
 import { ReactNode } from 'react';
 
 export interface HealthIndicator {
   title: string;
   value: string;
   change: string;
-  icon: string; // Changed from function returning ReactNode to string
+  icon: string;
   score?: number;
   previousScore?: number;
   maxScore?: number;
@@ -14,14 +13,14 @@ export interface HealthIndicator {
   intakeReference?: string;
   updatedAt?: string;
   actionItems?: string[];
-  trendData?: number[]; // Added for trend mini-charts
-  plainLanguage?: string; // Added for user-friendly descriptions
-  actionSuggestion?: string; // Added for direct action item
+  trendData?: number[];
+  plainLanguage?: string;
+  actionSuggestion?: string;
 }
 
 export interface CarePlanItem {
   title: string;
-  icon: string; // Changed from function returning ReactNode to string
+  icon: string;
   status: "not-started" | "started" | "in-progress" | "complete";
   description: string;
   completedSteps?: number;
@@ -36,9 +35,9 @@ export interface CarePlanItem {
   evidence?: string;
   lastUpdated?: string;
   weeklyTargets?: string[];
-  insights?: string; // Added for AI-generated insights about the goal
-  correlations?: string; // Added to show connections with other health areas
-  priority?: "high" | "medium" | "low"; // Added to help with prioritization
+  insights?: string;
+  correlations?: string;
+  priority?: "high" | "medium" | "low";
 }
 
 export interface Milestone {
@@ -51,21 +50,21 @@ export interface Milestone {
 export interface HealthPulseItem {
   area: string;
   score: number;
-  initialScore?: number; // Optional to fix the type error
+  initialScore: number;
   improving: boolean;
   priority?: boolean;
   tooltip?: string;
-  trend?: 'up' | 'down' | 'stable';
-  trendPercentage?: number; // Added to show percentage improvement
-  relatedTo?: string[];
-  systemExplanation?: string;
-  lastCheckInMention?: boolean; // Added to track if mentioned in recent check-ins
-  streakData?: {
+  trend: 'up' | 'down' | 'stable';
+  trendPercentage: number;
+  relatedTo: string[];
+  systemExplanation: string;
+  lastCheckInMention: boolean;
+  streakData: {
     current: number;
     target: number;
     change: number;
     status: 'improved' | 'declined' | 'stable';
-  }; // Added for habit tracking
+  };
 }
 
 export interface OverviewItem {
@@ -139,7 +138,6 @@ export interface MilestonesData {
   }[];
 }
 
-// New interface for habit streaks
 export interface HabitStreak {
   habit: string;
   icon: string;
@@ -150,9 +148,18 @@ export interface HabitStreak {
   supportedGoal?: string;
 }
 
-// New interface for AI system suggestion
 export interface SystemSuggestion {
   suggestion: string;
   basedOn: string;
   impact: string;
+}
+
+export interface HabitTrend {
+  habit: string;
+  icon: string;
+  trend: string;
+  direction: 'up' | 'down' | 'stable';
+  current: number;
+  target: number;
+  status: 'improved' | 'declined' | 'stable';
 }
