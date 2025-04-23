@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Lock, FileText, ArrowRight, MessageCircle } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
@@ -14,6 +13,7 @@ interface IntakeCall {
   summary: string;
   focusAreas: string[];
   talkPoints: string[];
+  reportUrl: string;
 }
 
 const intakeCalls: IntakeCall[] = [
@@ -29,7 +29,8 @@ const intakeCalls: IntakeCall[] = [
       "Discussion of your current lifestyle habits and daily routines",
       "Initial exploration of your health goals and priorities",
       "Completely confidential 30-minute conversation"
-    ]
+    ],
+    reportUrl: "/intake-report/initial"
   },
   {
     id: 2,
@@ -43,7 +44,8 @@ const intakeCalls: IntakeCall[] = [
       "Explore your readiness and motivation for specific changes",
       "Begin identifying patterns that may affect your health goals",
       "Start developing personalized wellness strategies together"
-    ]
+    ],
+    reportUrl: "/intake-report/deep-dive"
   },
   {
     id: 3,
@@ -57,7 +59,8 @@ const intakeCalls: IntakeCall[] = [
       "Develop strategies for overcoming potential obstacles",
       "Establish your personalized follow-up and support plan",
       "Finalize your comprehensive wellness roadmap"
-    ]
+    ],
+    reportUrl: "/intake-report/planning"
   }
 ];
 
@@ -101,8 +104,8 @@ const TalkToHanaDialog = ({ callTitle, talkPoints }: { callTitle: string, talkPo
 const IntakePage = () => {
   const navigate = useNavigate();
 
-  const handleViewReport = (callId: number) => {
-    navigate('/intake-report');
+  const handleViewReport = (reportUrl: string) => {
+    navigate(reportUrl);
   };
 
   return (
@@ -173,7 +176,7 @@ const IntakePage = () => {
                   
                   {call.completed ? (
                     <Button 
-                      onClick={() => handleViewReport(call.id)} 
+                      onClick={() => handleViewReport(call.reportUrl)}
                       variant="outline"
                     >
                       <FileText className="mr-2 h-4 w-4" /> View Report

@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -34,6 +33,9 @@ const App = () => (
               <Route path="/followup-report" element={<FollowupReport />} />
               <Route path="/intake" element={<Intake />} />
               <Route path="/intake-report" element={<IntakeReport />} />
+              <Route path="/intake-report/initial" element={<import('./pages/IntakeInitialReport').then(m => m.default)} />
+              <Route path="/intake-report/deep-dive" element={<import('./pages/IntakeDeepDiveReport').then(m => m.default)} />
+              <Route path="/intake-report/planning" element={<import('./pages/IntakePlanningReport').then(m => m.default)} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
