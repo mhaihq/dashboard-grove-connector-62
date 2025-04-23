@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +11,9 @@ import FollowupReport from "./pages/FollowupReport";
 import ClinicalGuidelines from "./pages/ClinicalGuidelines";
 import Intake from "./pages/Intake";
 import IntakeReport from "./pages/IntakeReport";
+import IntakeInitialReport from "./pages/IntakeInitialReport";
+import IntakeDeepDiveReport from "./pages/IntakeDeepDiveReport";
+import IntakePlanningReport from "./pages/IntakePlanningReport";
 import NotFound from "./pages/NotFound";
 import Sidebar from "./components/Sidebar";
 import './App.css'; // Keep styles
@@ -33,9 +37,9 @@ const App = () => (
               <Route path="/followup-report" element={<FollowupReport />} />
               <Route path="/intake" element={<Intake />} />
               <Route path="/intake-report" element={<IntakeReport />} />
-              <Route path="/intake-report/initial" element={<import('./pages/IntakeInitialReport').then(m => m.default)} />
-              <Route path="/intake-report/deep-dive" element={<import('./pages/IntakeDeepDiveReport').then(m => m.default)} />
-              <Route path="/intake-report/planning" element={<import('./pages/IntakePlanningReport').then(m => m.default)} />
+              <Route path="/intake-report/initial" element={<IntakeInitialReport />} />
+              <Route path="/intake-report/deep-dive" element={<IntakeDeepDiveReport />} />
+              <Route path="/intake-report/planning" element={<IntakePlanningReport />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </div>
