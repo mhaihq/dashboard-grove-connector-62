@@ -1,5 +1,6 @@
+
 import React from 'react';
-import { Lock, FileText, ArrowRight, MessageCircle } from 'lucide-react';
+import { Lock, FileText, ArrowRight, PhoneCall } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -69,7 +70,7 @@ const TalkToHanaDialog = ({ callTitle, talkPoints }: { callTitle: string, talkPo
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" className="gap-2">
-          <MessageCircle className="h-4 w-4" /> Talk to Hana
+          <PhoneCall className="h-4 w-4" /> Talk to Hana
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
