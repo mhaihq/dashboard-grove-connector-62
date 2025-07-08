@@ -16,7 +16,7 @@ interface DashboardProps {
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ onScheduleCall }) => {
-  const userName = "Sarah";
+  const userName = "Sthita";
   
   // Demo recommendations data
   const recommendations = [
