@@ -40,7 +40,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           </Avatar>
           <div>
             <div className="text-sm font-medium">{userName}</div>
-            {userEmail && <div className="text-xs text-gray-500">{userEmail}</div>}
+            {userEmail && <div className="text-xs text-gray-500">sthita@usehana.com</div>}
           </div>
         </div>
       </div>
