@@ -53,7 +53,7 @@ export const Sidebar = () => {
           "p-4 border-b border-gray-100 flex items-center justify-center"
         )}>
           <img 
-            src="https://cdn.prod.website-files.com/66d8df543029dd65661ce227/67ac8c50f043cf48b1a2116d_logoHana-p-500.png" 
+            src="/lovable-uploads/e64b8ff0-624f-4c76-8ba0-eb3df58c7ced.png" 
             alt="Hana Logo" 
             className={cn(
               "object-contain transition-all duration-300",
