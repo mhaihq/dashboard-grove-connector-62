@@ -17,8 +17,8 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 }) => {
   return (
     <header className="h-16 border-b border-gray-100 flex items-center justify-between px-6 bg-white animate-fade-in">
-      <div className="text-xl font-semibold text-gray-900">
-        Dashboard
+      <div className="flex items-center">
+        <img src="/lovable-uploads/4311b229-3c37-4091-98f7-da7e5245ec5c.png" alt="Hana" className="h-8" />
       </div>
       
       <div className="flex items-center gap-6">
