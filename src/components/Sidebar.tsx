@@ -57,7 +57,7 @@ export const Sidebar = () => {
             alt="Hana Logo" 
             className={cn(
               "object-contain transition-all duration-300",
-              showExpanded ? "h-11" : "h-8"
+              showExpanded ? "h-12" : "h-8"
             )}
           />
         </div>
