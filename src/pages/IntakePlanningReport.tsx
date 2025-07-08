@@ -108,8 +108,8 @@ const planningSessionData = {
 };
 
 const IntakePlanningReport = () => {
-  const userName = "Matteo";
-  const userEmail = "matteo@matteowastaken.com";
+  const userName = "Sthita";
+  const userEmail = "sthita@usehana.com";
 
   return (
     <div className="min-h-screen bg-gray-50">

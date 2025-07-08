@@ -1,14 +1,14 @@
 
 // User Information
 export const userInfo = {
-  name: "Matteo Smith",
-  email: "matteo.smith@example.com",
+  name: "Sthita",
+  email: "sthita@usehana.com",
   date: "January 29, 2025"
 };
 
 // Welcome Message
 export const welcome = {
-  greeting: "Hi Matteo",
+  greeting: "Hi Sthita",
   message: "Thanks for our conversation. I've analyzed our discussion to provide you with meaningful insights about your wellbeing. Let me know if anything doesn't resonate so we can refine these observations together."
 };
 
